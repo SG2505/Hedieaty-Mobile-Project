@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:hedieaty/Shared%20Widgets/App_Bar.dart';
-import 'package:hedieaty/Shared%20Widgets/Home/FriendTile.dart';
+import 'package:hedieaty/View/Widgets/AppBar.dart';
+import 'package:hedieaty/View/HomeScreen/FriendTile.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -106,8 +106,15 @@ class _HomescreenState extends State<Homescreen> {
                     FocusScope.of(context).unfocus();
                   },
                   hintText: '  search friends & gift lists',
+                  hintStyle: WidgetStatePropertyAll(
+                      Theme.of(context).textTheme.bodySmall),
+                  textStyle: WidgetStatePropertyAll(
+                      Theme.of(context).textTheme.bodySmall),
                   elevation: WidgetStatePropertyAll(0),
-                  leading: Icon(Icons.search_rounded),
+                  leading: Image.asset(
+                      width: 25,
+                      height: 25,
+                      'assets/icons/HomeScreenIcons/search.png'),
                   trailing: [
                     searchBarController.text != ''
                         ? IconButton(
@@ -116,7 +123,7 @@ class _HomescreenState extends State<Homescreen> {
                                 searchBarController.clear();
                               });
                             },
-                            icon: Icon(Icons.close_rounded))
+                            icon: Icon(Icons.cancel))
                         : Container()
                   ],
                 ),
@@ -128,46 +135,12 @@ class _HomescreenState extends State<Homescreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
-                  Friendtile(
-                      title: 'John Doe',
-                      subtitle: 'Upcoming Event: Birthday',
-                      imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
-                      numOfEvents: 2),
+                  for (var i = 1; i < 16; i++)
+                    Friendtile(
+                        title: 'John Doe',
+                        subtitle: 'Upcoming: Birthday',
+                        imgPath: 'assets/icons/HomeScreenIcons/user_avatar.png',
+                        numOfEvents: i),
                 ],
               ),
             ],

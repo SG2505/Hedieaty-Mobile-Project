@@ -25,7 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: AppBar(
             title: Text(
               title,
-              style: TextStyle(fontSize: 26, fontFamily: 'LeckerliOne'),
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(

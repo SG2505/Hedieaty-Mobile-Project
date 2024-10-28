@@ -48,7 +48,7 @@ class EventTile extends StatelessWidget {
               width: 35,
               height: 35,
             )),
-        onTap: () => context.go('/MyEvents/EventDetails'),
+        onTap: () => context.push('/EventDetails'),
       ),
     );
   }

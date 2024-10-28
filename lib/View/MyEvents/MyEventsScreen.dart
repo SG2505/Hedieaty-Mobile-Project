@@ -3,14 +3,14 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/MyEvents/EventTile.dart';
 
-class MyEvents extends StatefulWidget {
-  const MyEvents({super.key});
+class MyEventsScreen extends StatefulWidget {
+  const MyEventsScreen({super.key});
 
   @override
-  State<MyEvents> createState() => _MyEventsState();
+  State<MyEventsScreen> createState() => _MyEventsScreenState();
 }
 
-class _MyEventsState extends State<MyEvents> {
+class _MyEventsScreenState extends State<MyEventsScreen> {
   TextEditingController searchBarController = TextEditingController();
   int currentIndex = 0;
   @override

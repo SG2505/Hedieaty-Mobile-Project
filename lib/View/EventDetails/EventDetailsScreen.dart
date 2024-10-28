@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hedieaty/View/EventDetails/EventDetailsTile.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 
 class EventDetails extends StatefulWidget {
@@ -30,7 +31,8 @@ class _EventDetailsState extends State<EventDetails> {
             ),
             InkWell(
               onTap: () {},
-              child: Container(
+              borderRadius: BorderRadius.circular(25),
+              child: Ink(
                 width: 0.5.sw,
                 height: 0.15.sh,
                 decoration: BoxDecoration(
@@ -87,7 +89,28 @@ class _EventDetailsState extends State<EventDetails> {
               color: Colors.grey.shade400,
             ),
             leftAlignedLabel('Date'),
-            ListTile()
+            EventDetailsTile(
+                text: '25/12/2024',
+                leadingImgPath: 'assets/icons/EventDetailsIcons/calendar.png'),
+            leftAlignedLabel('Status'),
+            EventDetailsTile(
+                text: 'Completed',
+                leadingImgPath:
+                    'assets/icons/EventDetailsIcons/completedEvent.png'),
+            leftAlignedLabel('Categroy'),
+            EventDetailsTile(
+                text: 'Completed',
+                leadingImgPath: 'assets/icons/EventDetailsIcons/birthday.png'),
+            leftAlignedLabel('Go to Gift List'),
+            EventDetailsTile(
+              text: 'Gift List',
+              leadingImgPath: 'assets/icons/EventDetailsIcons/giftbox.png',
+              trailingImgPath: 'assets/icons/EventDetailsIcons/next.png',
+              isGoToGiftList: true,
+            ),
+            const SizedBox(
+              height: 10,
+            )
           ],
         ),
       ),
@@ -98,7 +121,7 @@ class _EventDetailsState extends State<EventDetails> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 16, top: 10),
           child: Text(
             text,
             style: Theme.of(context).textTheme.labelMedium,

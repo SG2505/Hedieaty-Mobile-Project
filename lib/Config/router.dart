@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/View/EditInfo/EditInfoScreen.dart';
 import 'package:hedieaty/View/EventDetails/EventDetailsScreen.dart';
 import 'package:hedieaty/View/GiftDetails/GiftDetailsScreen.dart';
 import 'package:hedieaty/View/GiftList/GiftListScreen.dart';
@@ -41,6 +42,13 @@ class RouterClass {
             path: 'GiftDetails',
             builder: (BuildContext context, GoRouterState state) {
               return const GiftDetailsScreen();
+            },
+            routes: [],
+          ),
+          GoRoute(
+            path: 'EditInfo',
+            builder: (BuildContext context, GoRouterState state) {
+              return const EditInfoScreen();
             },
             routes: [],
           ),

@@ -21,14 +21,8 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(appBarActions: [
-        IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.delete,
-              size: 40,
-            ))
-      ], title: 'Edit Info', isTherebackButton: true),
+      appBar: CustomAppBar(
+          appBarActions: [], title: 'Edit Info', isTherebackButton: true),
       body: SingleChildScrollView(
         child: Form(
           key: giftDetailsFormKey,
@@ -124,7 +118,10 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                   width: 0.3.sw,
                   height: 0.05.sh,
                   label: 'Save',
-                  onPressed: () {})
+                  onPressed: () {}),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),

@@ -69,6 +69,10 @@ flutter:
     - assets/icons/EventScreenIcons/
     - assets/icons/EventDetailsIcons/
     - assets/icons/GiftListScreenIcons/
+    - assets/icons/ProfileScreenIcons/
+    - assets/icons/NavigationBarIcons/
+    - assets/icons/CategoryIcons/
+    - assets/icons/Miscellaneous/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -128,7 +128,10 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                   width: 0.3.sw,
                   height: 0.05.sh,
                   label: 'Save',
-                  onPressed: () {})
+                  onPressed: () {}),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),

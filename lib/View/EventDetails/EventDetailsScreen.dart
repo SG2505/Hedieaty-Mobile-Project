@@ -99,7 +99,7 @@ class _EventDetailsState extends State<EventDetails> {
                     'assets/icons/EventDetailsIcons/completedEvent.png'),
             leftAlignedLabel('Categroy'),
             EventDetailsTile(
-                text: 'Completed',
+                text: 'Birthday',
                 leadingImgPath: 'assets/icons/EventDetailsIcons/birthday.png'),
             leftAlignedLabel('Go to Gift List'),
             EventDetailsTile(

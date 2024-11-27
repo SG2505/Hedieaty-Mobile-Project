@@ -33,7 +33,7 @@ class EventDetailsTile extends StatelessWidget {
               : IconButton(
                   alignment: Alignment.centerRight,
                   onPressed: () {
-                    context.go('/MyEvents/EventDetails/GiftList');
+                    context.push('/GiftList');
                   },
                   icon: Image.asset(
                     trailingImgPath!,

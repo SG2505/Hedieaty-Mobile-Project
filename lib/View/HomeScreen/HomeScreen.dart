@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/HomeScreen/FriendTile.dart';
+import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -13,6 +13,7 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   TextEditingController searchBarController = TextEditingController();
   int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,38 +39,13 @@ class _HomescreenState extends State<Homescreen> {
                 )),
           ],
         ),
-        bottomNavigationBar: SnakeNavigationBar.color(
-          height: 70,
-          elevation: 100,
-          selectedLabelStyle:
-              TextStyle(fontSize: 12, color: Color.fromRGBO(135, 217, 250, 1)),
-          unselectedLabelStyle: TextStyle(fontSize: 12),
-          backgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
-          behaviour: SnakeBarBehaviour.floating,
-          snakeShape: SnakeShape.indicator,
-          snakeViewColor: Color.fromRGBO(135, 217, 250, 1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
-          padding: EdgeInsets.all(8),
-
-          selectedItemColor: Color.fromRGBO(135, 217, 250, 1),
-          unselectedItemColor: Colors.white,
-          showUnselectedLabels: true,
-          showSelectedLabels:
-              true, // will always be false if snakeShape is circle
-
+        bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: currentIndex,
-          onTap: (index) => setState(() => currentIndex = index),
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'tickets'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'tickets'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'tickets'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'tickets'),
-          ],
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
         ),
         body: SingleChildScrollView(
           child: Column(

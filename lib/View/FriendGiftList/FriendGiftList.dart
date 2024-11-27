@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
+import 'package:hedieaty/View/Widgets/GeneralSwitchListTile.dart';
 
-class Giftlistscreen extends StatefulWidget {
-  const Giftlistscreen({super.key});
+class FriendGiftListScreen extends StatefulWidget {
+  const FriendGiftListScreen({super.key});
 
   @override
-  State<Giftlistscreen> createState() => _GiftlistscreenState();
+  State<FriendGiftListScreen> createState() => _FriendGiftListScreenState();
 }
 
-class _GiftlistscreenState extends State<Giftlistscreen> {
+class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
   TextEditingController searchBarController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(appBarActions: [
-        IconButton(
-            tooltip: 'Add Gift',
-            onPressed: () {},
-            icon: Icon(
-              size: 40,
-              Icons.add_circle_rounded,
-              color: const Color.fromRGBO(50, 48, 48, 1),
-            ))
-      ], title: 'My Gift List', isTherebackButton: true),
+      appBar: CustomAppBar(
+          appBarActions: [],
+          title: "Friend's Gift List",
+          isTherebackButton: true),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 15,
+              height: 10,
             ),
             Row(
               children: [
@@ -85,7 +78,7 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
               height: 20,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   padding: EdgeInsets.all(8),
@@ -109,75 +102,51 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  margin: EdgeInsets.fromLTRB(15, 0, 3, 0),
+                  decoration: BoxDecoration(
+                      color: ThemeClass.yellowThemeColor,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Text(
+                    'You Pledged',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
               ],
             ),
             const SizedBox(
               height: 20,
             ),
-            ListView(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                for (var i = 0; i < 4; i++)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      onTap: () {
-                        context.push('/GiftDetails');
-                      },
-                      leading: Image.asset(
-                        'assets/icons/GiftListScreenIcons/gift.png',
-                        width: 60,
-                        height: 60,
-                      ),
-                      title: Text(
-                        'Special Gift',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      subtitle: Text(
-                        'Category: Special',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      trailing: IconButton(
-                          onPressed: () {
-                            context.push('/GiftDetails');
-                          },
-                          icon: Image.asset(
-                              width: 35,
-                              height: 35,
-                              'assets/icons/GiftListScreenIcons/next.png')),
-                    ),
-                  ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    tileColor: ThemeClass.greenThemeColor,
-                    onTap: () {
-                      context.push('/GiftDetails');
-                    },
-                    leading: Image.asset(
-                      'assets/icons/GiftListScreenIcons/gift.png',
-                      width: 60,
-                      height: 60,
-                    ),
-                    title: Text(
-                      'Special Gift',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    subtitle: Text(
-                      'Category: Special',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    trailing: IconButton(
-                        onPressed: () => context.push('/GiftDetails'),
-                        icon: Image.asset(
-                            width: 35,
-                            height: 35,
-                            'assets/icons/GiftListScreenIcons/next.png')),
-                  ),
-                )
-              ],
-            )
+            GeneralSwitchListTile(
+                tileColor: ThemeClass.yellowThemeColor,
+                text: 'PS5',
+                leadingImgPath: 'assets/icons/Miscellaneous/ps4.png',
+                subtitile: 'Category: Electronics',
+                toggleValue: true,
+                onToggleChanged: (value) {}),
+            GeneralSwitchListTile(
+                tileColor: ThemeClass.greenThemeColor,
+                text: 'To Mars Book',
+                leadingImgPath: 'assets/icons/Miscellaneous/book.png',
+                subtitile: 'Category: Books',
+                toggleValue: false,
+                hideToggle: true,
+                onToggleChanged: (value) {}),
+            GeneralSwitchListTile(
+                tileColor: ThemeClass.blueThemeColor,
+                text: 'Chessboard',
+                leadingImgPath: 'assets/icons/Miscellaneous/chess.png',
+                subtitile: 'Category: Games',
+                toggleValue: false,
+                onToggleChanged: (value) {}),
+            GeneralSwitchListTile(
+                tileColor: ThemeClass.blueThemeColor,
+                text: 'Flashlight',
+                leadingImgPath: 'assets/icons/Miscellaneous/flashlight.png',
+                subtitile: 'Category: Tols',
+                toggleValue: false,
+                onToggleChanged: (value) {}),
           ],
         ),
       ),

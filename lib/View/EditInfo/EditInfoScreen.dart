@@ -17,7 +17,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController genderController = TextEditingController();
-  final giftDetailsFormKey = GlobalKey<FormState>();
+  final editInfoFormKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +25,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
           appBarActions: [], title: 'Edit Info', isTherebackButton: true),
       body: SingleChildScrollView(
         child: Form(
-          key: giftDetailsFormKey,
+          key: editInfoFormKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -59,8 +59,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                 height: 0.065.sh,
                 child: TextFormField(
                   controller: nameController,
-                  decoration:
-                      ThemeClass.textFormFieldDecoration("Name can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ////////////email form field////////////
@@ -70,8 +69,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                 height: 0.065.sh,
                 child: TextFormField(
                   controller: emailController,
-                  decoration: ThemeClass.textFormFieldDecoration(
-                      "Email can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ////////////Phone form field////////////
@@ -81,8 +79,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                 height: 0.065.sh,
                 child: TextFormField(
                   controller: phoneController,
-                  decoration: ThemeClass.textFormFieldDecoration(
-                      "Enter a correct phone number"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ///////////////category form field///////// adjuuuuuuust to date picker
@@ -92,8 +89,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                 height: 0.065.sh,
                 child: TextFormField(
                   controller: dateController,
-                  decoration:
-                      ThemeClass.textFormFieldDecoration("Name can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ////////////////status dropdown////////////

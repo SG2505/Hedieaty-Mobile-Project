@@ -6,10 +6,10 @@ import 'package:hedieaty/View/FriendGiftList/FriendGiftList.dart';
 import 'package:hedieaty/View/FriendPage/FriendEvents.dart';
 import 'package:hedieaty/View/GiftDetails/GiftDetailsScreen.dart';
 import 'package:hedieaty/View/GiftList/GiftListScreen.dart';
-import 'package:hedieaty/View/HomeScreen/HomeScreen.dart';
 import 'package:hedieaty/View/MyEvents/MyEventsScreen.dart';
 import 'package:hedieaty/View/MyPledgedGifts/MyPledgedGiftsScreen.dart';
 import 'package:hedieaty/View/Profile/MyProfileScreen.dart';
+import 'package:hedieaty/View/SignUp/SignUpScreen.dart';
 
 class RouterClass {
   static final GoRouter router = GoRouter(
@@ -18,9 +18,16 @@ class RouterClass {
       GoRoute(
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
-          return const Homescreen();
+          return const SignUpScreen();
         },
         routes: <RouteBase>[
+          GoRoute(
+            path: 'SignUpScreen',
+            builder: (BuildContext context, GoRouterState state) {
+              return const SignUpScreen();
+            },
+            routes: <RouteBase>[],
+          ),
           GoRoute(
             path: 'MyEvents',
             builder: (BuildContext context, GoRouterState state) {

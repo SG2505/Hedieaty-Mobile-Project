@@ -40,7 +40,7 @@ class GradientButton extends StatelessWidget {
         ),
       ),
       onTap: () {
-        onPressed;
+        onPressed();
       },
     );
   }

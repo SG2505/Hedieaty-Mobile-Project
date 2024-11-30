@@ -37,24 +37,35 @@ class ThemeClass {
     useMaterial3: true,
   );
 
-  static textFormFieldDecoration(String errorText) {
+  static textFormFieldDecoration({Icon? prefixIcon, Widget? suffixWidget}) {
     return InputDecoration(
-        //errorText: errorText,
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 14),
-        filled: true,
-        fillColor: Color.fromRGBO(230, 255, 252, 1),
-        enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),
-            borderRadius: BorderRadius.circular(35)),
-        focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),
-            borderRadius: BorderRadius.circular(35)),
-        errorBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(width: 3, color: Color.fromRGBO(240, 41, 41, 1)),
-            borderRadius: BorderRadius.circular(35)));
+      prefixIcon: prefixIcon,
+      suffix: suffixWidget,
+      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+      filled: true,
+      fillColor: Color.fromRGBO(230, 255, 252, 1),
+      isDense: true,
+      border: OutlineInputBorder(
+          borderSide:
+              BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),
+          borderRadius: BorderRadius.circular(35)),
+      enabledBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),
+          borderRadius: BorderRadius.circular(35)),
+      focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),
+          borderRadius: BorderRadius.circular(35)),
+      errorBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(width: 3, color: Color.fromRGBO(240, 41, 41, 1)),
+          borderRadius: BorderRadius.circular(35)),
+      errorStyle: TextStyle(
+        color: Color.fromRGBO(240, 41, 41, 1),
+        fontSize: 14, // Adjust the error message size
+      ),
+    );
   }
 
   static InputDecorationTheme dropdownMenuDecoration() {

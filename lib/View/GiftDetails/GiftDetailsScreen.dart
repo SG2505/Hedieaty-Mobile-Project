@@ -65,8 +65,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                 height: 0.065.sh,
                 child: TextFormField(
                   controller: nameController,
-                  decoration:
-                      ThemeClass.textFormFieldDecoration("Name can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ////////////price form field////////////
@@ -77,8 +76,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                 child: TextFormField(
                   controller: priceController,
                   keyboardType: TextInputType.numberWithOptions(),
-                  decoration:
-                      ThemeClass.textFormFieldDecoration("Name can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ///////////////category form field/////////
@@ -88,8 +86,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                 height: 0.065.sh,
                 child: TextFormField(
                   controller: categoryController,
-                  decoration:
-                      ThemeClass.textFormFieldDecoration("Name can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               ////////////////status dropdown////////////
@@ -117,8 +114,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                 child: TextFormField(
                   controller: descriptionController,
                   maxLines: null,
-                  decoration:
-                      ThemeClass.textFormFieldDecoration("Name can't be empty"),
+                  decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
               const SizedBox(

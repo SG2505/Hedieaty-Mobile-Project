@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hedieaty/Config/router.dart';
 import 'package:hedieaty/Config/theme.dart';
+import 'package:hedieaty/Model/AppUser.dart';
 
+late AppUser currentUser;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

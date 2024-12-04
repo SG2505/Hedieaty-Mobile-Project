@@ -48,13 +48,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
             context.go('/'); // Navigate to home
             break;
           case 1:
-            context.push('/MyEvents'); // Navigate to events
+            context.pushNamed('myEvents'); // Navigate to events
             break;
           case 2:
-            context.push('/MyProfile'); // Navigate to profile
+            context.pushNamed('myProfile'); // Navigate to profile
             break;
           case 3:
-            context.push('/settings'); // Navigate to settings
+            context.pushNamed('/settings'); // Navigate to settings
             break;
           default:
             break;

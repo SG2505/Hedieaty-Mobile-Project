@@ -6,6 +6,7 @@ class ThemeClass {
   static Color yellowThemeColor = Color.fromRGBO(244, 237, 193, 1);
 
   static ThemeData theme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: blueThemeColor),
     textTheme: TextTheme(
       headlineLarge: TextStyle(
         fontSize: 30,
@@ -41,7 +42,7 @@ class ThemeClass {
     return InputDecoration(
       prefixIcon: prefixIcon,
       suffix: suffixWidget,
-      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+      contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 14),
       filled: true,
       fillColor: Color.fromRGBO(230, 255, 252, 1),
       isDense: true,
@@ -70,7 +71,7 @@ class ThemeClass {
 
   static InputDecorationTheme dropdownMenuDecoration() {
     return InputDecorationTheme(
-        contentPadding: EdgeInsets.symmetric(vertical: 05, horizontal: 14),
+        contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
         filled: true,
         fillColor: Color.fromRGBO(230, 255, 252, 1),
         enabledBorder: OutlineInputBorder(

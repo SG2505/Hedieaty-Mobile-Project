@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hedieaty/Model/AppUser.dart';
 import 'package:hedieaty/Services/AuthService.dart';
 import 'package:hedieaty/Services/FirebaseUserService.dart';
+import 'package:hedieaty/main.dart';
 
 class UserController {
   static final Authservice _authservice = Authservice();
@@ -35,6 +36,22 @@ class UserController {
       return result;
     } else {
       return 'An unknown error occurred during sign-up.';
+    }
+  }
+
+  static Future<dynamic> handleLogin({
+    required String email,
+    required String password,
+  }) async {
+    var result = await _authservice.signIn(email: email, password: password);
+
+    if (result is User) {
+      var userData = await _firebaseUserService.fetchUser(result.uid);
+      currentUser = AppUser.fromJson(userData!);
+      return true;
+    } else {
+      // Failure: Return the error message
+      return result;
     }
   }
 }

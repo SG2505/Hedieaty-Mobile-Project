@@ -4,6 +4,7 @@ import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/UserController.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
+import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          appBarActions: [], title: 'Hedieaty', isTherebackButton: false),
+          appBarActions: [], title: 'Hedieaty', isTherebackButton: true),
       body: SingleChildScrollView(
         child: Form(
             key: signUpDetailsFormKey,
@@ -60,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 sizedBox,
                 /////////////name form field////////////
-                textFieldLabel('Name'),
+                TextFieldLable(text: 'Name'),
                 SizedBox(
                   width: 0.83.sw,
                   height: 80,
@@ -82,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 ////////////email form field////////////
-                textFieldLabel('Email'),
+                TextFieldLable(text: 'Email'),
                 SizedBox(
                   width: 0.83.sw,
                   height: 80,
@@ -110,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 ////////////Phone form field////////////
-                textFieldLabel('Phone'),
+                TextFieldLable(text: 'Phone'),
                 SizedBox(
                   width: 0.83.sw,
                   height: 80,
@@ -126,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 sizedBox,
                 ////////////////password form field////////////
-                textFieldLabel('Password'),
+                TextFieldLable(text: 'Password'),
                 SizedBox(
                   width: 0.83.sw,
                   height: 80,
@@ -167,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 sizedBox,
-                textFieldLabel('Confirm Password'),
+                TextFieldLable(text: 'Confirm Password'),
                 SizedBox(
                   width: 0.83.sw,
                   height: 80,
@@ -228,19 +229,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 sizedBox,
               ],
             )),
-      ),
-    );
-  }
-
-  Widget textFieldLabel(String text) {
-    return Container(
-      margin: EdgeInsets.only(left: 50, bottom: 10, top: 10),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
       ),
     );
   }

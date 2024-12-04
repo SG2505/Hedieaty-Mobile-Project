@@ -41,8 +41,10 @@ class Authservice {
         return 'This user is not registered.';
       } else if (e.code == 'wrong-password') {
         return 'The password is incorrect.';
+      } else if (e.code == "invalid-email") {
+        return "wrong email format";
       } else {
-        return 'An unknown error occurred. Please try again.';
+        return 'Unknown error occurred. Please try again.';
       }
     } catch (e) {
       return 'An unexpected error occurred: $e';

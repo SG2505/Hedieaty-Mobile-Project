@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class EditInfoScreen extends StatefulWidget {
   const EditInfoScreen({super.key});
@@ -18,6 +19,9 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   final editInfoFormKey = GlobalKey<FormState>();
+
+  var completePhoneNumber = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,59 +60,66 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
               textFieldLabel('Name'),
               SizedBox(
                 width: 0.83.sw,
-                height: 0.065.sh,
+                height: 80,
                 child: TextFormField(
+                  style: ThemeClass.theme.textTheme.bodyMedium,
+                  cursorHeight: 30,
                   controller: nameController,
-                  decoration: ThemeClass.textFormFieldDecoration(),
+                  decoration: ThemeClass.textFormFieldDecoration(
+                      prefixIcon: Icon(
+                    Icons.edit,
+                    color: Colors.grey,
+                  )),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Name can't be empty";
+                    }
+                    return null;
+                  },
                 ),
               ),
               ////////////email form field////////////
               textFieldLabel('Email'),
               SizedBox(
                 width: 0.83.sw,
-                height: 0.065.sh,
+                height: 80,
                 child: TextFormField(
+                  style: ThemeClass.theme.textTheme.bodyMedium,
                   controller: emailController,
-                  decoration: ThemeClass.textFormFieldDecoration(),
+                  decoration: ThemeClass.textFormFieldDecoration(
+                      prefixIcon: Icon(
+                    Icons.alternate_email_rounded,
+                    color: Colors.grey,
+                  )),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email can't be empty";
+                    }
+                    // Regular expression for validating email format
+                    else if (!RegExp(
+                            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                        .hasMatch(value)) {
+                      return "Enter a valid email address";
+                    }
+                    return null;
+                  },
                 ),
               ),
+
               ////////////Phone form field////////////
               textFieldLabel('Phone'),
               SizedBox(
                 width: 0.83.sw,
-                height: 0.065.sh,
-                child: TextFormField(
+                height: 80,
+                child: IntlPhoneField(
+                  style: ThemeClass.theme.textTheme.bodyMedium,
                   controller: phoneController,
                   decoration: ThemeClass.textFormFieldDecoration(),
+                  initialCountryCode: 'EG',
+                  onChanged: (phone) {
+                    completePhoneNumber = phone.completeNumber;
+                  },
                 ),
-              ),
-              ///////////////category form field///////// adjuuuuuuust to date picker
-              textFieldLabel('Date of Birth'),
-              SizedBox(
-                width: 0.83.sw,
-                height: 0.065.sh,
-                child: TextFormField(
-                  controller: dateController,
-                  decoration: ThemeClass.textFormFieldDecoration(),
-                ),
-              ),
-              ////////////////status dropdown////////////
-              textFieldLabel('Gender'),
-              DropdownMenu(
-                  controller: genderController,
-                  width: 0.83.sw,
-                  inputDecorationTheme: ThemeClass.dropdownMenuDecoration(),
-                  menuStyle: MenuStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(ThemeClass.blueThemeColor),
-                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)))),
-                  dropdownMenuEntries: [
-                    DropdownMenuEntry(value: 'male', label: 'Male'),
-                    DropdownMenuEntry(value: 'female', label: 'Female')
-                  ]),
-              const SizedBox(
-                height: 20,
               ),
               GradientButton(
                   width: 0.3.sw,

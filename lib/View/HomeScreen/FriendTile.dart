@@ -18,7 +18,7 @@ class Friendtile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(15.0, 8, 15, 8),
       child: ListTile(
-        onTap: () => context.push('/FriendEvents'),
+        onTap: () => context.pushNamed('friendEvents'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         tileColor: Color.fromRGBO(206, 240, 252, 1),
         leading: CircleAvatar(

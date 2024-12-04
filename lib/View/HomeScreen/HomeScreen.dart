@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/HomeScreen/FriendTile.dart';
 import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
+import 'package:hedieaty/main.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -45,6 +46,7 @@ class _HomescreenState extends State<Homescreen> {
             setState(() {
               currentIndex = index;
             });
+            currentIndex = 0;
           },
         ),
         body: SingleChildScrollView(
@@ -59,7 +61,7 @@ class _HomescreenState extends State<Homescreen> {
                 children: [
                   Text(
                     //replace with user name
-                    'Hello, Salah',
+                    'Hello, ${currentUser.name}',
                     style: TextStyle(
                       fontSize: 35,
                       fontFamily: 'League Spartan',

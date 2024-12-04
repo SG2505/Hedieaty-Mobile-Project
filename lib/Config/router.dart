@@ -6,6 +6,8 @@ import 'package:hedieaty/View/FriendGiftList/FriendGiftList.dart';
 import 'package:hedieaty/View/FriendPage/FriendEvents.dart';
 import 'package:hedieaty/View/GiftDetails/GiftDetailsScreen.dart';
 import 'package:hedieaty/View/GiftList/GiftListScreen.dart';
+import 'package:hedieaty/View/HomeScreen/HomeScreen.dart';
+import 'package:hedieaty/View/Login/LoginScreen.dart';
 import 'package:hedieaty/View/MyEvents/MyEventsScreen.dart';
 import 'package:hedieaty/View/MyPledgedGifts/MyPledgedGiftsScreen.dart';
 import 'package:hedieaty/View/Profile/MyProfileScreen.dart';
@@ -13,85 +15,99 @@ import 'package:hedieaty/View/SignUp/SignUpScreen.dart';
 
 class RouterClass {
   static final GoRouter router = GoRouter(
+    initialLocation: '/LoginScreen',
     routes: <RouteBase>[
-      // Home
+      // Login Screen Route (Root level)
+      GoRoute(
+        path: '/LoginScreen',
+        name: 'login',
+        builder: (BuildContext context, GoRouterState state) {
+          return const Loginscreen();
+        },
+      ),
+
+      // Home Screen Route (Root level)
       GoRoute(
         path: '/',
+        name: 'home',
         builder: (BuildContext context, GoRouterState state) {
-          return const SignUpScreen();
+          return const Homescreen();
         },
-        routes: <RouteBase>[
-          GoRoute(
-            path: 'SignUpScreen',
-            builder: (BuildContext context, GoRouterState state) {
-              return const SignUpScreen();
-            },
-            routes: <RouteBase>[],
-          ),
+        routes: [
+          // Nested routes under Home
           GoRoute(
             path: 'MyEvents',
+            name: 'myEvents',
             builder: (BuildContext context, GoRouterState state) {
               return const MyEventsScreen();
             },
-            routes: <RouteBase>[],
           ),
           GoRoute(
             path: 'EventDetails',
+            name: 'eventDetails',
             builder: (BuildContext context, GoRouterState state) {
               return const EventDetails();
             },
-            routes: <RouteBase>[],
           ),
           GoRoute(
             path: 'GiftList',
+            name: 'giftList',
             builder: (BuildContext context, GoRouterState state) {
               return const Giftlistscreen();
             },
-            routes: <RouteBase>[],
           ),
           GoRoute(
             path: 'GiftDetails',
+            name: 'giftDetails',
             builder: (BuildContext context, GoRouterState state) {
               return const GiftDetailsScreen();
             },
-            routes: [],
           ),
           GoRoute(
             path: 'EditInfo',
+            name: 'editInfo',
             builder: (BuildContext context, GoRouterState state) {
               return const EditInfoScreen();
             },
-            routes: [],
           ),
           GoRoute(
             path: 'MyProfile',
+            name: 'myProfile',
             builder: (BuildContext context, GoRouterState state) {
               return const MyProfileScreen();
             },
-            routes: [],
           ),
           GoRoute(
             path: 'MyPledgedGifts',
+            name: 'myPledgedGifts',
             builder: (BuildContext context, GoRouterState state) {
               return const MyPledgedGiftsScreen();
             },
-            routes: [],
           ),
           GoRoute(
             path: 'FriendGiftList',
+            name: 'friendGiftList',
             builder: (BuildContext context, GoRouterState state) {
               return const FriendGiftListScreen();
             },
-            routes: [],
           ),
           GoRoute(
             path: 'FriendEvents',
+            name: 'friendEvents',
             builder: (BuildContext context, GoRouterState state) {
               return const FriendEventsScreen();
             },
-            routes: [],
           ),
         ],
+      ),
+
+      // Sign Up Route (Root level)
+      GoRoute(
+        path: '/SignUpScreen',
+        name: 'signup',
+        builder: (BuildContext context, GoRouterState state) {
+          return const SignUpScreen();
+        },
       ),
     ],
   );

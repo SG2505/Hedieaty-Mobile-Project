@@ -17,7 +17,7 @@ class GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(30),
       child: Ink(
         width: width,
         height: height,
@@ -30,7 +30,7 @@ class GradientButton extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(30),
         ),
         child: Center(
           child: Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hedieaty/View/EventDetails/EventDetailsTile.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 
@@ -16,7 +17,9 @@ class _EventDetailsState extends State<EventDetails> {
     return Scaffold(
       appBar: CustomAppBar(appBarActions: [
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.pushNamed("addEditEvents");
+            },
             icon: Image.asset(
                 width: 35,
                 height: 35,

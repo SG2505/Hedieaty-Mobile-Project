@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hedieaty/Config/theme.dart';
+import 'package:hedieaty/Controller/UserController.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
+import 'package:hedieaty/main.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EditInfoScreen extends StatefulWidget {
   const EditInfoScreen({super.key});
@@ -16,11 +19,18 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
   final editInfoFormKey = GlobalKey<FormState>();
 
   var completePhoneNumber = '';
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: currentUser.name);
+    emailController = TextEditingController(text: currentUser.email);
+    // phoneController = TextEditingController(text: currentUser.phoneNumber);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +122,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                 width: 0.83.sw,
                 height: 80,
                 child: IntlPhoneField(
+                  initialValue: currentUser.phoneNumber,
                   style: ThemeClass.theme.textTheme.bodyMedium,
                   controller: phoneController,
                   decoration: ThemeClass.textFormFieldDecoration(),
@@ -121,11 +132,43 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                   },
                 ),
               ),
-              GradientButton(
-                  width: 0.3.sw,
-                  height: 0.05.sh,
-                  label: 'Save',
-                  onPressed: () {}),
+              isLoading
+                  ? LoadingAnimationWidget.fourRotatingDots(
+                      color: Color.fromRGBO(76, 212, 253, 1), size: 40)
+                  : GradientButton(
+                      width: 0.3.sw,
+                      height: 0.05.sh,
+                      label: 'Save',
+                      onPressed: () async {
+                        if (editInfoFormKey.currentState!.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          var result = await UserController.updateUser(
+                            userId: currentUser.id!,
+                            name: nameController.text,
+                            email: emailController.text.trim(),
+                            phoneNumber: phoneController.text,
+                            profilePictureUrl: currentUser.profilePictureUrl,
+                            preferences: currentUser.preferences,
+                          );
+
+                          // Handle the result (show message, navigate, etc.)
+                          if (result) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            // Show success message or navigate to another screen
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("updated")));
+                          } else {
+                            // Show error message
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(result)));
+                          }
+                        }
+                      },
+                    ),
               const SizedBox(
                 height: 20,
               ),

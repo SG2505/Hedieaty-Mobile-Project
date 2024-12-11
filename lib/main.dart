@@ -6,16 +6,15 @@ import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Model/AppUser.dart';
 
 late AppUser currentUser;
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  initializeFirebase();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -29,4 +28,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeClass.theme),
     );
   }
+}
+
+void initializeFirebase() async {
+  await Firebase.initializeApp();
 }

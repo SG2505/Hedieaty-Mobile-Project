@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/EditInfo/EditInfoScreen.dart';
+import 'package:hedieaty/View/EventDetails/AddEditEvent.dart';
 import 'package:hedieaty/View/EventDetails/EventDetailsScreen.dart';
 import 'package:hedieaty/View/FriendGiftList/FriendGiftList.dart';
 import 'package:hedieaty/View/FriendPage/FriendEvents.dart';
@@ -25,6 +27,14 @@ class RouterClass {
           return const Loginscreen();
         },
       ),
+      // Sign Up Route (Root level)
+      GoRoute(
+        path: '/SignUpScreen',
+        name: 'signup',
+        builder: (BuildContext context, GoRouterState state) {
+          return const SignUpScreen();
+        },
+      ),
 
       // Home Screen Route (Root level)
       GoRoute(
@@ -47,6 +57,16 @@ class RouterClass {
             name: 'eventDetails',
             builder: (BuildContext context, GoRouterState state) {
               return const EventDetails();
+            },
+          ),
+          GoRoute(
+            path: 'AddEditEvents',
+            name: 'addEditEvents',
+            builder: (context, state) {
+              final event = state.extra as Event?;
+              return AddEditEventScreen(
+                  event:
+                      event); // Pass the event to the AddEditEventScreen if editing
             },
           ),
           GoRoute(
@@ -99,15 +119,6 @@ class RouterClass {
             },
           ),
         ],
-      ),
-
-      // Sign Up Route (Root level)
-      GoRoute(
-        path: '/SignUpScreen',
-        name: 'signup',
-        builder: (BuildContext context, GoRouterState state) {
-          return const SignUpScreen();
-        },
       ),
     ],
   );

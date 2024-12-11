@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/UserController.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -29,6 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var completePhoneNumber = '';
   bool isPasswordHidden = true;
   bool isConfirmPasswordHidden = true;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,28 +207,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 sizedBox,
-                GradientButton(
-                    label: 'Sign Up',
-                    onPressed: () {
-                      if (signUpDetailsFormKey.currentState!.validate()) {
-                        // All validations passed, proceed with the sign-up logic
-                        print('Sign Up Successful');
-                        print('Name: ${nameController.text}');
-                        print('Email: ${emailController.text}');
-                        print('Phone: ${completePhoneNumber}');
-                        var message = UserController.handleSignUp(
-                            name: nameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            phoneNumber: completePhoneNumber);
-                        print(message);
-                      } else {
-                        // Validation failed, errors will automatically display
-                        print('Validation failed');
-                      }
-                    },
-                    width: 0.3.sw,
-                    height: 0.065.sh),
+                isLoading
+                    ? LoadingAnimationWidget.flickr(
+                        leftDotColor: const Color.fromRGBO(75, 211, 252, 1),
+                        rightDotColor: const Color.fromRGBO(177, 246, 239, 1),
+                        size: 40)
+                    : GradientButton(
+                        label: 'Sign Up',
+                        onPressed: () async {
+                          if (signUpDetailsFormKey.currentState!.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            // All validations passed, proceed with the sign-up logic
+                            print('Sign Up Successful');
+                            print('Name: ${nameController.text}');
+                            print('Email: ${emailController.text}');
+                            print('Phone: ${completePhoneNumber}');
+                            var message = await UserController.handleSignUp(
+                                name: nameController.text,
+                                email: emailController.text,
+                                password: passwordController.text,
+                                phoneNumber: completePhoneNumber);
+                            print(message);
+                            setState(() {
+                              isLoading = false; // Stop loading
+                            });
+                            context.goNamed('home');
+                          } else {
+                            // Validation failed, errors will automatically display
+                            print('Validation failed');
+                          }
+                        },
+                        width: 0.3.sw,
+                        height: 0.065.sh),
                 sizedBox,
               ],
             )),

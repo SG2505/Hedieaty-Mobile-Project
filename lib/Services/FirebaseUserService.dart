@@ -13,12 +13,13 @@ class FirebaseUserService {
     }
   }
 
-  Future<void> updateUser(AppUser user) async {
+  Future<bool> updateUser(String userId, Map<String, dynamic> data) async {
     try {
-      await _firestore.collection('users').doc(user.id).update(user.toJson());
-      print('User document updated successfully.');
+      await _firestore.collection('users').doc(userId).update(data);
+      return true;
     } catch (e) {
-      print("Error updating user document: $e");
+      print('Error updating user in Firebase: $e');
+      return false;
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/UserController.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:toastification/toastification.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginscreenState extends State<Loginscreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isPasswordHidden = true;
+  bool isLoading = false;
 
   final loginFormKey = GlobalKey<FormState>();
   static const sizedBox = SizedBox(
@@ -132,27 +134,36 @@ class _LoginscreenState extends State<Loginscreen> {
                 ),
               ),
               sizedBox,
-              GradientButton(
-                  label: "Login",
-                  onPressed: () async {
-                    if (loginFormKey.currentState!.validate()) {
-                      var result = await UserController.handleLogin(
-                          email: emailController.text.trim(),
-                          password: passwordController.text);
-                      // handleLogin returns bool which is true only if success
-                      if (result == true) {
-                        context.goNamed('home');
-                      } else {
-                        toastification.show(
-                            alignment: Alignment.topCenter,
-                            autoCloseDuration: const Duration(seconds: 5),
-                            context: context,
-                            title: Text(result));
-                      }
-                    }
-                  },
-                  width: 0.3.sw,
-                  height: 0.065.sh),
+              isLoading
+                  ? LoadingAnimationWidget.inkDrop(
+                      color: ThemeClass.blueThemeColor, size: 50)
+                  : GradientButton(
+                      label: "Login",
+                      onPressed: () async {
+                        if (loginFormKey.currentState!.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          var result = await UserController.handleLogin(
+                              email: emailController.text.trim(),
+                              password: passwordController.text);
+                          // handleLogin returns bool which is true only if success
+                          if (result == true) {
+                            context.goNamed('home');
+                          } else {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            toastification.show(
+                                alignment: Alignment.topCenter,
+                                autoCloseDuration: const Duration(seconds: 5),
+                                context: context,
+                                title: Text(result));
+                          }
+                        }
+                      },
+                      width: 0.3.sw,
+                      height: 0.065.sh),
               sizedBox,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

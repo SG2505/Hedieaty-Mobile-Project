@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hedieaty/Model/AppUser.dart';
 import 'package:hedieaty/SQL_Local/LocalDB.dart';
-import 'package:hedieaty/Services/AuthService.dart';
-import 'package:hedieaty/Services/FirebaseUserService.dart';
+import 'package:hedieaty/Firebase/AuthService.dart';
+import 'package:hedieaty/Firebase/FirebaseUserService.dart';
 import 'package:hedieaty/main.dart';
 
 class UserController {

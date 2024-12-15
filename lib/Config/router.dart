@@ -56,7 +56,8 @@ class RouterClass {
             path: 'EventDetails',
             name: 'eventDetails',
             builder: (BuildContext context, GoRouterState state) {
-              return const EventDetails();
+              final event = state.extra as Event?;
+              return EventDetails(event: event);
             },
           ),
           GoRoute(

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hedieaty/Config/theme.dart';
+import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
+import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:hedieaty/main.dart';
 import 'package:intl/intl.dart';
-import 'package:hedieaty/Model/Event.dart'; // Import the Event model
+import 'package:hedieaty/Model/Event.dart';
+import 'package:toastification/toastification.dart'; // Import the Event model
 
 class AddEditEventScreen extends StatefulWidget {
   final Event? event;
@@ -21,6 +24,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
   final eventFormKey = GlobalKey<FormState>();
 
   DateTime? selectedDate;
@@ -30,11 +34,12 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
     super.initState();
     // If editing an existing event, pre-fill the fields
     if (widget.event != null) {
-      nameController.text = widget.event!.name;
+      nameController.text = widget.event!.name!;
       locationController.text = widget.event!.location ?? '';
       descriptionController.text = widget.event!.description ?? '';
       selectedDate = widget.event!.date;
       dateController.text = DateFormat('dd-MM-yyyy').format(selectedDate!);
+      categoryController.text = widget.event!.category!;
     }
   }
 
@@ -97,7 +102,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 height: 20,
               ),
               /////////////name form field////////////
-              textFieldLabel('Name'),
+              TextFieldLable(text: 'Name'),
               SizedBox(
                 width: 0.83.sw,
                 height: 0.065.sh,
@@ -113,7 +118,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 ),
               ),
               ////////////Location form field////////////
-              textFieldLabel('Location'),
+              TextFieldLable(text: 'Location'),
               SizedBox(
                 width: 0.83.sw,
                 height: 0.065.sh,
@@ -122,8 +127,8 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                   decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
-              ////////////Date form fieldr////////////
-              textFieldLabel('Date'),
+              ////////////Date form field////////////
+              TextFieldLable(text: 'Date'),
               SizedBox(
                 width: 0.83.sw,
                 height: 0.065.sh,
@@ -147,7 +152,19 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 ),
               ),
               ////////////Description form field///////////
-              textFieldLabel('Description'),
+              TextFieldLable(text: 'Category'),
+              DropdownMenu(
+                  width: 0.83.sw,
+                  menuHeight: 200,
+                  controller: categoryController,
+                  inputDecorationTheme: ThemeClass.dropdownMenuDecoration(),
+                  menuStyle: ThemeClass.dropdownMenuStyle(),
+                  dropdownMenuEntries: [...getEventCategoriesDropdown()]),
+              const SizedBox(
+                height: 20,
+              ),
+              ////////////Description form field///////////
+              TextFieldLable(text: 'Description'),
               Container(
                 width: 0.83.sw,
                 constraints: BoxConstraints(
@@ -166,23 +183,31 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 width: 0.3.sw,
                 height: 0.05.sh,
                 label: widget.event == null ? 'Add' : 'Save',
-                onPressed: () {
+                onPressed: () async {
                   if (eventFormKey.currentState?.validate() ?? false) {
-                    // Update event logic here (save to database, etc.)
-                    // If it's an edit, update the existing event in your database
-                    // If it's an add, create a new event
-
                     final event = Event(
-                      id: widget
-                          .event?.id, // Pass the existing ID if it's editing
-                      name: nameController.text,
-                      date: selectedDate!,
-                      location: locationController.text,
-                      description: descriptionController.text,
-                      userId: currentUser.id!, // Replace with actual userId
-                    );
-
-                    print('Event saved: ${event.name}, ${event.date}');
+                        id: widget.event?.id,
+                        name: nameController.text,
+                        date: selectedDate!,
+                        location: locationController.text,
+                        description: descriptionController.text,
+                        category: categoryController.text,
+                        userId: currentUser.id!,
+                        status: widget.event == null
+                            ? 'upcoming'
+                            : widget.event!.status,
+                        isPublished: 0);
+                    bool result = await EventController.addEvent(event);
+                    if (result) {
+                      print(
+                          'Event saved: ${event.name}, ${event.date} ${event.id} ${event.userId} ${event.category} ${event.status} ${event.isPublished} ${event.location}');
+                    } else {
+                      toastification.show(
+                          alignment: Alignment.topCenter,
+                          autoCloseDuration: const Duration(seconds: 5),
+                          context: context,
+                          title: Text('Failed to add event'));
+                    }
                   }
                 },
               ),
@@ -196,16 +221,27 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
     );
   }
 
-  Widget textFieldLabel(String text) {
-    return Container(
-      margin: EdgeInsets.only(left: 50, bottom: 10, top: 10),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
-      ),
-    );
+  List<DropdownMenuEntry<String>> getEventCategoriesDropdown() {
+    List<Map<String, String>> categories = [
+      {'value': 'anniversary', 'label': 'Anniversary'},
+      {'value': 'birthday', 'label': 'Birthday'},
+      {'value': 'wedding', 'label': 'Wedding'},
+      {'value': 'engagement', 'label': 'Engagement'},
+      {'value': 'celebration_party', 'label': 'Celebration Party'},
+      {'value': 'baby_shower', 'label': 'Baby Shower'},
+      {'value': 'graduation', 'label': 'Graduation'},
+      {'value': 'retirement', 'label': 'Retirement'},
+      {'value': 'valentines_day', 'label': 'Valentine\'s Day'},
+      {'value': 'new_years_eve', 'label': 'New Year\'s Eve'},
+      {'value': 'farewell_party', 'label': 'Farewell Party'},
+      {'value': 'charity_event', 'label': 'Charity Event'},
+    ];
+
+    return categories
+        .map((category) => DropdownMenuEntry<String>(
+              value: category['value']!,
+              label: category['label']!,
+            ))
+        .toList();
   }
 }

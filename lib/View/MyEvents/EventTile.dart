@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Model/Event.dart';
 
 class EventTile extends StatelessWidget {
   final String title;
@@ -7,13 +8,15 @@ class EventTile extends StatelessWidget {
   final String category;
   final String status;
   final String imgPath;
+  final Event event;
   const EventTile(
       {super.key,
       required this.title,
       required this.imgPath,
       required this.date,
       required this.category,
-      required this.status});
+      required this.status,
+      required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class EventTile extends StatelessWidget {
               width: 35,
               height: 35,
             )),
-        onTap: () => context.push('/EventDetails'),
+        onTap: () => context.push('/EventDetails', extra: event),
       ),
     );
   }

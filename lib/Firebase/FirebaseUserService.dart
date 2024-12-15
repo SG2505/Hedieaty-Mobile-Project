@@ -35,4 +35,15 @@ class FirebaseUserService {
     }
     return null;
   }
+
+  Future<bool> deleteUser(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).delete();
+      print('User document deleted successfully.');
+      return true;
+    } catch (e) {
+      print("Error deleting user document: $e");
+      return false;
+    }
+  }
 }

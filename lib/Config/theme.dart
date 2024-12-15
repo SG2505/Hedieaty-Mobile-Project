@@ -87,4 +87,14 @@ class ThemeClass {
                 BorderSide(width: 3, color: Color.fromRGBO(240, 41, 41, 1)),
             borderRadius: BorderRadius.circular(35)));
   }
+
+  static MenuStyle dropdownMenuStyle() {
+    return MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(blueThemeColor),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ));
+  }
 }

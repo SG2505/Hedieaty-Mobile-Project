@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/EventDetails/EventDetailsTile.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 
 class EventDetails extends StatefulWidget {
-  const EventDetails({super.key});
+  final Event? event;
+  const EventDetails({super.key, this.event});
 
   @override
   State<EventDetails> createState() => _EventDetailsState();
@@ -14,11 +16,12 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
   @override
   Widget build(BuildContext context) {
+    DateTime eventDate = widget.event!.date;
     return Scaffold(
       appBar: CustomAppBar(appBarActions: [
         IconButton(
             onPressed: () {
-              context.pushNamed("addEditEvents");
+              context.pushNamed("addEditEvents", extra: widget.event);
             },
             icon: Image.asset(
                 width: 35,
@@ -52,8 +55,10 @@ class _EventDetailsState extends State<EventDetails> {
             const SizedBox(
               height: 20,
             ),
+
+            ///event title - name//////
             Text(
-              'Event Title',
+              widget.event!.name!,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(
@@ -72,12 +77,14 @@ class _EventDetailsState extends State<EventDetails> {
                 ),
               ),
             ),
+
+            ///description///
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'This event is setup to celebrate john’s birthday next Wednesday be sure to make it on time.',
+                  widget.event!.description!,
                   style: TextStyle(
                       fontFamily: 'Figtree',
                       fontWeight: FontWeight.w900,
@@ -93,16 +100,17 @@ class _EventDetailsState extends State<EventDetails> {
             ),
             leftAlignedLabel('Date'),
             EventDetailsTile(
-                text: '25/12/2024',
+                text:
+                    '${eventDate.day} - ${eventDate.month} - ${eventDate.year}',
                 leadingImgPath: 'assets/icons/EventDetailsIcons/calendar.png'),
             leftAlignedLabel('Status'),
             EventDetailsTile(
-                text: 'Completed',
+                text: widget.event!.status!,
                 leadingImgPath:
                     'assets/icons/EventDetailsIcons/completedEvent.png'),
             leftAlignedLabel('Categroy'),
             EventDetailsTile(
-                text: 'Birthday',
+                text: widget.event!.category!,
                 leadingImgPath: 'assets/icons/EventDetailsIcons/birthday.png'),
             leftAlignedLabel('Go to Gift List'),
             EventDetailsTile(

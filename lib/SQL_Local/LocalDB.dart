@@ -32,8 +32,9 @@ class LocalDB {
 
   /// Create database tables
   Future<void> _onCreate(Database db, int version) async {
+    //users table//
     await db.execute('''
-      CREATE TABLE AppUser(
+      CREATE TABLE Users(
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
@@ -42,21 +43,23 @@ class LocalDB {
         preferences TEXT
       )
     ''');
-
+    //event table//
     await db.execute('''
-      CREATE TABLE Event(
+      CREATE TABLE Events(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         date TEXT NOT NULL,
         location TEXT,
         description TEXT,
         userId TEXT NOT NULL,
-        status TEXT NOT NULL
+        status TEXT NOT NULL,
+        category TEXT NOT NULL,
+        isPublished INTEGER NOT NULL DEFAULT 0
       )
     ''');
-
+    //gift table//
     await db.execute('''
-      CREATE TABLE Gift(
+      CREATE TABLE Gifts(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         description TEXT,
@@ -65,25 +68,42 @@ class LocalDB {
         imageUrl TEXT,
         status TEXT NOT NULL,
         eventId INTEGER NOT NULL,
-        FOREIGN KEY (eventId) REFERENCES Event (id)
+        isPublished INTEGER NOT NULL DEFAULT 0,
+        FOREIGN KEY (eventId) REFERENCES Events (id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE Friends(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId TEXT NOT NULL,
+        friendId TEXT NOT NULL
       )
     ''');
   }
 
   /// Handle database upgrades
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    await db.execute('DROP TABLE IF EXISTS AppUser');
-    await db.execute('DROP TABLE IF EXISTS Event');
-    await db.execute('DROP TABLE IF EXISTS Gift');
+    await db.execute('DROP TABLE IF EXISTS Users');
+    await db.execute('DROP TABLE IF EXISTS Events');
+    await db.execute('DROP TABLE IF EXISTS Gifts');
+    await db.execute('DROP TABLE IF EXISTS Friends');
     await _onCreate(db, newVersion);
   }
 
   /// Reset the entire database
   Future<void> resetDatabase() async {
     final db = await database;
-    await db.execute('DELETE FROM AppUser');
-    await db.execute('DELETE FROM Event');
-    await db.execute('DELETE FROM Gift');
+    await db.execute('DROP TABLE IF EXISTS Users');
+    await db.execute('DROP TABLE IF EXISTS Events');
+    await db.execute('DROP TABLE IF EXISTS Gifts');
+    await db.execute('DROP TABLE IF EXISTS Friends');
+  }
+
+  Future<void> resetDatabase2() async {
+    String path = join(await getDatabasesPath(), 'Hedieaty.db');
+    await deleteDatabase(path);
+    _database = null; // Clear the cached instance
   }
 
   // ---------------- CRUD Functions ----------------
@@ -91,20 +111,20 @@ class LocalDB {
   // --------- AppUser CRUD ---------
   Future<void> insertUser(AppUser user) async {
     final db = await database;
-    await db.insert('AppUser', user.toJson(),
+    await db.insert('Users', user.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> updateUser(AppUser user) async {
     final db = await database;
-    await db.update('AppUser', user.toJson(),
-        where: 'id = ?', whereArgs: [user.id]);
+    await db
+        .update('Users', user.toJson(), where: 'id = ?', whereArgs: [user.id]);
   }
 
   Future<AppUser?> getUserById(String id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
-        await db.query('AppUser', where: 'id = ?', whereArgs: [id]);
+        await db.query('Users', where: 'id = ?', whereArgs: [id]);
     if (maps.isNotEmpty) {
       return AppUser.fromJson(maps.first);
     }
@@ -113,21 +133,23 @@ class LocalDB {
 
   Future<void> deleteUser(String id) async {
     final db = await database;
-    await db.delete('AppUser', where: 'id = ?', whereArgs: [id]);
+    await db.delete('Users', where: 'id = ?', whereArgs: [id]);
   }
 
   // --------- Event CRUD ---------
   Future<int> insertEvent(Event event) async {
     final db = await database;
     return await db.insert(
-      'Event',
+      'Events',
       {
         'name': event.name,
         'date': event.date.toIso8601String(),
         'location': event.location,
         'description': event.description,
         'userId': event.userId,
-        'status': event.status.toString().split('.').last,
+        'status': event.status,
+        'category': event.category,
+        'isPublished': event.isPublished,
       },
     );
   }
@@ -135,14 +157,16 @@ class LocalDB {
   Future<void> updateEvent(Event event) async {
     final db = await database;
     await db.update(
-      'Event',
+      'Events',
       {
         'name': event.name,
         'date': event.date.toIso8601String(),
         'location': event.location,
         'description': event.description,
         'userId': event.userId,
-        'status': event.status.toString().split('.').last,
+        'status': event.status,
+        'category': event.category,
+        'isPublished': event.isPublished,
       },
       where: 'id = ?',
       whereArgs: [event.id],
@@ -152,41 +176,33 @@ class LocalDB {
   Future<List<Event>> getEventsByUserId(String userId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
-        await db.query('Event', where: 'userId = ?', whereArgs: [userId]);
+        await db.query('Events', where: 'userId = ?', whereArgs: [userId]);
+    print(maps[0]);
     return List.generate(
       maps.length,
-      (i) => Event(
-        id: maps[i]['id'].toString(),
-        name: maps[i]['name'],
-        date: DateTime.parse(maps[i]['date']),
-        location: maps[i]['location'],
-        description: maps[i]['description'],
-        userId: maps[i]['userId'],
-        status: EventStatus.values.firstWhere(
-          (e) => e.toString() == 'EventStatus.${maps[i]['status']}',
-        ),
-      ),
+      (i) => Event.fromJson(maps[i]),
     );
   }
 
   Future<void> deleteEvent(int id) async {
     final db = await database;
-    await db.delete('Event', where: 'id = ?', whereArgs: [id]);
+    await db.delete('Events', where: 'id = ?', whereArgs: [id]);
   }
 
   // --------- Gift CRUD ---------
   Future<int> insertGift(Gift gift) async {
     final db = await database;
     return await db.insert(
-      'Gift',
+      'Gifts',
       {
         'name': gift.name,
         'description': gift.description,
         'category': gift.category,
         'price': gift.price,
         'imageUrl': gift.imageUrl,
-        'status': gift.status.toString().split('.').last,
+        'status': gift.status,
         'eventId': gift.eventId,
+        'isPublished': gift.isPublished
       },
     );
   }
@@ -194,15 +210,16 @@ class LocalDB {
   Future<void> updateGift(Gift gift) async {
     final db = await database;
     await db.update(
-      'Gift',
+      'Gifts',
       {
         'name': gift.name,
         'description': gift.description,
         'category': gift.category,
         'price': gift.price,
         'imageUrl': gift.imageUrl,
-        'status': gift.status.toString().split('.').last,
+        'status': gift.status,
         'eventId': gift.eventId,
+        'isPublished': gift.isPublished
       },
       where: 'id = ?',
       whereArgs: [gift.id],
@@ -212,7 +229,7 @@ class LocalDB {
   Future<List<Gift>> getGiftsByEventId(int eventId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
-        await db.query('Gift', where: 'eventId = ?', whereArgs: [eventId]);
+        await db.query('Gifts', where: 'eventId = ?', whereArgs: [eventId]);
     return List.generate(
       maps.length,
       (i) => Gift(
@@ -222,16 +239,44 @@ class LocalDB {
         category: maps[i]['category'],
         price: maps[i]['price'],
         imageUrl: maps[i]['imageUrl'],
-        status: GiftStatus.values.firstWhere(
-          (e) => e.toString() == 'GiftStatus.${maps[i]['status']}',
-        ),
+        status: maps[i]['status'],
         eventId: maps[i]['eventId'].toString(),
+        isPublished: maps[i]['isPublished'],
       ),
     );
   }
 
   Future<void> deleteGift(int id) async {
     final db = await database;
-    await db.delete('Gift', where: 'id = ?', whereArgs: [id]);
+    await db.delete('Gifts', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // --------- Friends CRUD ---------
+
+  // Insert a friend relationship (userId and friendId)
+  Future<int> insertFriend(String userId, String friendId) async {
+    final db = await database;
+    return await db.insert('Friends', {
+      'userId': userId,
+      'friendId': friendId,
+    });
+  }
+
+  // Get friends by userId
+  Future<List<String>> getFriendsByUserId(String userId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('Friends', where: 'userId = ?', whereArgs: [userId]);
+
+    return List.generate(maps.length, (i) {
+      return maps[i]['friendId'];
+    });
+  }
+
+  // Delete a friend relationship (userId and friendId)
+  Future<void> deleteFriend(String userId, String friendId) async {
+    final db = await database;
+    await db.delete('Friends',
+        where: 'userId = ? AND friendId = ?', whereArgs: [userId, friendId]);
   }
 }

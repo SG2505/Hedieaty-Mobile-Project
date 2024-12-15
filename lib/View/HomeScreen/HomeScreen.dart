@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/HomeScreen/FriendTile.dart';
 import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
@@ -32,7 +33,9 @@ class _HomescreenState extends State<Homescreen> {
                 )),
             IconButton(
                 tooltip: 'Add Event',
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed("addEditEvents");
+                },
                 icon: Image.asset(
                   'assets/icons/HomeScreenIcons/Add_Event.png',
                   width: 30,

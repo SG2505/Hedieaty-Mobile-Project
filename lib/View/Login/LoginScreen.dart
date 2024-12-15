@@ -141,6 +141,7 @@ class _LoginscreenState extends State<Loginscreen> {
                       label: "Login",
                       onPressed: () async {
                         if (loginFormKey.currentState!.validate()) {
+                          FocusManager.instance.primaryFocus?.unfocus();
                           setState(() {
                             isLoading = true;
                           });

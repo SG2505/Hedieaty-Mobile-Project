@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Controller/EventController.dart';
+import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/MyEvents/EventTile.dart';
 import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class MyEventsScreen extends StatefulWidget {
   const MyEventsScreen({super.key});
@@ -97,19 +100,46 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               SizedBox(
                 height: 20,
               ),
-              ListView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  for (var i = 1; i < 16; i++)
-                    EventTile(
-                        title: 'title',
-                        imgPath: '',
-                        date: '15/12/2024',
-                        category: 'category',
-                        status: 'status')
-                ],
-              ),
+              FutureBuilder<List<Event>>(
+                future: EventController.getEvents(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading spinner while waiting for the data
+                    return Center(
+                      child: LoadingAnimationWidget.threeArchedCircle(
+                        color: Colors.blue.shade400,
+                        size: 60,
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    // Show error if something went wrong
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+                    // Show message if no events are available
+                    return Center(child: Text('No events available.'));
+                  } else {
+                    print(EventController.events);
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final event = snapshot.data![index];
+                        print(event);
+                        return EventTile(
+                          title: event.name!,
+                          imgPath: 'assets/icons/Miscellaneous/book.png',
+                          date:
+                              '${event.date.day} - ${event.date.month} - ${event.date.year}',
+                          category: event.category!,
+                          status: event.status!,
+                          event: event,
+                        );
+                      },
+                    );
+                  }
+                },
+              )
             ],
           ),
         ));

@@ -1,5 +1,5 @@
 class Event {
-  int? id;
+  String id;
   final String? name;
   final DateTime date;
   String? location;
@@ -11,7 +11,7 @@ class Event {
   var gifts = [];
 
   Event({
-    this.id,
+    required this.id,
     required this.name,
     required this.date,
     this.location,

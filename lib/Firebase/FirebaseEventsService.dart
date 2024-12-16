@@ -5,14 +5,13 @@ class FirebaseEventService {
   final CollectionReference eventCollection =
       FirebaseFirestore.instance.collection('events');
 
-  Future<void> createEvent(Event event) async {
+  Future<bool> createEvent(Event event) async {
     try {
-      // make document id as userId_eventId
-      String docId = '${event.userId}_${event.id}';
-      // add the event to Firebase with the custom document id
-      await eventCollection.doc(docId).set(event.toJson());
+      await eventCollection.doc(event.id).set(event.toJson());
+      return true;
     } catch (e) {
-      throw Exception('Failed to create event: $e');
+      print('Failed to create event: $e');
+      return false;
     }
   }
 
@@ -28,21 +27,23 @@ class FirebaseEventService {
     }
   }
 
-  Future<void> updateEvent(Event event) async {
+  Future<bool> updateEvent(Event event) async {
     try {
-      String docId = '${event.userId}_${event.id}';
-      await eventCollection.doc(docId).update(event.toJson());
+      await eventCollection.doc(event.id).update(event.toJson());
+      return true;
     } catch (e) {
-      throw Exception('Failed to update event: $e');
+      print('Failed to update event: $e');
+      return false;
     }
   }
 
-  Future<void> deleteEvent(Event event) async {
+  Future<bool> deleteEvent(Event event) async {
     try {
-      String docId = '${event.userId}_${event.id}';
-      await eventCollection.doc(docId).delete();
+      await eventCollection.doc(event.id).delete();
+      return true;
     } catch (e) {
-      throw Exception('Failed to delete event: $e');
+      print('Failed to delete event: $e');
+      return false;
     }
   }
 }

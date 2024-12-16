@@ -4,44 +4,21 @@ import 'package:hedieaty/Model/Gift.dart';
 class FirebaseGiftService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<bool> createGift(String userId, int eventId, Gift gift) async {
+  Future<bool> createGift(Gift gift) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('events')
-          .where('userId', isEqualTo: userId)
-          .where('eventId', isEqualTo: eventId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final eventDocRef = querySnapshot.docs.first.reference;
-        final giftDocId = '${userId}_${eventId}_${gift.id}';
-        await eventDocRef.collection('gifts').doc(giftDocId).set(gift.toJson());
-        return true;
-      } else {
-        return false;
-      }
+      await _firestore.collection('gifts').doc(gift.id).set(gift.toJson());
+      return true;
     } catch (e) {
       print("Error adding gift: $e");
       return false;
     }
   }
 
-  Future<Gift?> getGiftById(String userId, int eventId, String giftId) async {
+  Future<Gift?> getGiftById(String giftId) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('events')
-          .where('userId', isEqualTo: userId)
-          .where('eventId', isEqualTo: eventId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final doc = await querySnapshot.docs.first.reference
-            .collection('gifts')
-            .doc(giftId)
-            .get();
-        if (doc.exists) {
-          return Gift.fromJson(doc.data() as Map<String, dynamic>);
-        }
+      final doc = await _firestore.collection('gifts').doc(giftId).get();
+      if (doc.exists) {
+        return Gift.fromJson(doc.data() as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -50,67 +27,36 @@ class FirebaseGiftService {
     }
   }
 
-  Future<void> updateGift(String userId, int eventId, Gift gift) async {
+  Future<bool> updateGift(Gift gift) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('events')
-          .where('userId', isEqualTo: userId)
-          .where('eventId', isEqualTo: eventId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty && gift.id != null) {
-        final giftDocId = '${userId}_${eventId}_${gift.id}';
-        await querySnapshot.docs.first.reference
-            .collection('gifts')
-            .doc(giftDocId)
-            .update(gift.toJson());
-      } else {
-        throw 'Event or Gift not found';
-      }
+      await _firestore.collection('gifts').doc(gift.id).update(gift.toJson());
+      return true;
     } catch (e) {
-      print("Error updating gift: \$e");
+      print("Error updating gift: $e");
+      return false;
     }
   }
 
-  Future<void> deleteGift(String userId, int eventId, String giftId) async {
+  Future<bool> deleteGift(String giftId) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('events')
-          .where('userId', isEqualTo: userId)
-          .where('eventId', isEqualTo: eventId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final giftDocId = '${userId}_${eventId}_$giftId';
-        await querySnapshot.docs.first.reference
-            .collection('gifts')
-            .doc(giftDocId)
-            .delete();
-      } else {
-        throw 'Event or Gift not found';
-      }
+      await _firestore.collection('gifts').doc(giftId).delete();
+      return true;
     } catch (e) {
       print("Error deleting gift: $e");
+      return false;
     }
   }
 
-  Future<List<Gift>> getGiftsByEvent(String userId, int eventId) async {
+  Future<List<Gift>> getGiftsByEvent(String eventId) async {
     try {
       final querySnapshot = await _firestore
-          .collection('events')
-          .where('userId', isEqualTo: userId)
+          .collection('gifts')
           .where('eventId', isEqualTo: eventId)
           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final giftsSnapshot =
-            await querySnapshot.docs.first.reference.collection('gifts').get();
-
-        return giftsSnapshot.docs
-            .map((doc) => Gift.fromJson(doc.data()))
-            .toList();
-      }
-      return [];
+      return querySnapshot.docs
+          .map((doc) => Gift.fromJson(doc.data()))
+          .toList();
     } catch (e) {
       print("Error getting gifts for event: $e");
       return [];

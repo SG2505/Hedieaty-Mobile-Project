@@ -129,7 +129,7 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
               height: 20,
             ),
             FutureBuilder(
-              future: GiftController.getGiftsByEventId(widget.event!.id!),
+              future: GiftController.getGiftsByEventId(widget.event!.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(

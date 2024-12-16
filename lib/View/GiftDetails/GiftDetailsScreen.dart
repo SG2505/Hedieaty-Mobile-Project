@@ -9,6 +9,7 @@ import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:toastification/toastification.dart';
+import 'package:uuid/uuid.dart';
 
 class GiftDetailsScreen extends StatefulWidget {
   final Gift? gift;
@@ -190,12 +191,13 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                       print("hello");
                       print(widget.event!.id);
                       // print(widget.gift!.name);
+                      var uuid = Uuid();
                       final gift = Gift(
-                        id: widget.gift?.id,
+                        id: widget.gift == null ? uuid.v4() : widget.gift!.id,
                         name: nameController.text,
                         category: categoryController.text,
                         price: double.parse(priceController.text.trim()),
-                        eventId: widget.event!.id!,
+                        eventId: widget.event!.id,
                         isPublished: 0,
                         description: descriptionController.text,
                         status: statusController.text,
@@ -254,7 +256,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
 
   void deleteGift() {
     try {
-      GiftController.deleteGift(widget.gift!.id!);
+      GiftController.deleteGift(widget.gift!.id);
       toastification.show(
           icon: Icon(
             Icons.check_circle,

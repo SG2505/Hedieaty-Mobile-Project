@@ -1,16 +1,16 @@
 class Gift {
-  int? id;
+  String id;
   final String name;
   String? description;
   final String category;
   final double price;
   String? imageUrl;
   String status;
-  final int eventId;
+  final String eventId;
   final int isPublished;
 
   Gift(
-      {this.id,
+      {required this.id,
       required this.name,
       this.description,
       required this.category,

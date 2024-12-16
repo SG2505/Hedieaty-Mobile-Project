@@ -11,8 +11,7 @@ class EventController {
 
   static Future<bool> addEvent(Event event) async {
     try {
-      int localId = await _localDB.insertEvent(event);
-      event.id = localId;
+      await _localDB.insertEvent(event);
       await firebaseEventService.createEvent(event);
       return true;
     } catch (e) {
@@ -46,7 +45,7 @@ class EventController {
 
   static Future<bool> deleteEvent(Event event) async {
     try {
-      await _localDB.deleteEvent(event.id!);
+      await _localDB.deleteEvent(event.id);
       await firebaseEventService.deleteEvent(event);
       return true;
     } catch (e) {

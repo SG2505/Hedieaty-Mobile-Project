@@ -46,7 +46,7 @@ class LocalDB {
     //event table//
     await db.execute('''
       CREATE TABLE Events(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         date TEXT NOT NULL,
         location TEXT,
@@ -60,7 +60,7 @@ class LocalDB {
     //gift table//
     await db.execute('''
       CREATE TABLE Gifts(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         description TEXT,
         category TEXT NOT NULL,
@@ -75,9 +75,9 @@ class LocalDB {
 
     await db.execute('''
       CREATE TABLE Friends(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
         userId TEXT NOT NULL,
-        friendId TEXT NOT NULL
+        friendId TEXT NOT NULL,
+        PRIMARY KEY (userId, friendId)
       )
     ''');
   }
@@ -142,6 +142,7 @@ class LocalDB {
     return await db.insert(
       'Events',
       {
+        'id': event.id,
         'name': event.name,
         'date': event.date.toIso8601String(),
         'location': event.location,
@@ -159,6 +160,7 @@ class LocalDB {
     await db.update(
       'Events',
       {
+        'id': event.id,
         'name': event.name,
         'date': event.date.toIso8601String(),
         'location': event.location,
@@ -184,7 +186,7 @@ class LocalDB {
     );
   }
 
-  Future<void> deleteEvent(int id) async {
+  Future<void> deleteEvent(String id) async {
     final db = await database;
     await db.delete('Events', where: 'id = ?', whereArgs: [id]);
   }
@@ -195,6 +197,7 @@ class LocalDB {
     return await db.insert(
       'Gifts',
       {
+        'id': gift.id,
         'name': gift.name,
         'description': gift.description,
         'category': gift.category,
@@ -212,6 +215,7 @@ class LocalDB {
     await db.update(
       'Gifts',
       {
+        'id': gift.id,
         'name': gift.name,
         'description': gift.description,
         'category': gift.category,
@@ -226,7 +230,7 @@ class LocalDB {
     );
   }
 
-  Future<List<Gift>> getGiftsByEventId(int eventId) async {
+  Future<List<Gift>> getGiftsByEventId(String eventId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('Gifts', where: 'eventId = ?', whereArgs: [eventId]);
@@ -236,7 +240,7 @@ class LocalDB {
     );
   }
 
-  Future<void> deleteGift(int id) async {
+  Future<void> deleteGift(String id) async {
     final db = await database;
     await db.delete('Gifts', where: 'id = ?', whereArgs: [id]);
   }

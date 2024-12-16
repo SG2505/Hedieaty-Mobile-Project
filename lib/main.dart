@@ -12,7 +12,7 @@ void main() async {
   initializeFirebase();
   //final localDB = LocalDB();
   //await localDB.resetDatabase2();
-  // await localDB.database; // initializes the db
+  //await localDB.database; // initializes the db
 
   runApp(MyApp());
 }

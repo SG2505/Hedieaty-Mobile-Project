@@ -9,7 +9,8 @@ import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:hedieaty/main.dart';
 import 'package:intl/intl.dart';
 import 'package:hedieaty/Model/Event.dart';
-import 'package:toastification/toastification.dart'; // Import the Event model
+import 'package:toastification/toastification.dart';
+import 'package:uuid/uuid.dart'; // Import the Event model
 
 class AddEditEventScreen extends StatefulWidget {
   final Event? event;
@@ -187,8 +188,9 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 onPressed: () async {
                   if (eventFormKey.currentState?.validate() ?? false) {
                     FocusManager.instance.primaryFocus?.unfocus();
+                    var uuid = Uuid();
                     final event = Event(
-                        id: widget.event?.id,
+                        id: widget.event == null ? uuid.v4() : widget.event!.id,
                         name: nameController.text,
                         date: selectedDate!,
                         location: locationController.text,

@@ -32,7 +32,7 @@ class Event {
       'category': category,
       'userId': userId,
       'status': status,
-      'isPublished': isPublished == false ? 0 : 1,
+      'isPublished': isPublished
     };
   }
 

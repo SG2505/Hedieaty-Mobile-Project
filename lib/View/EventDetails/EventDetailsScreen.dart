@@ -118,6 +118,7 @@ class _EventDetailsState extends State<EventDetails> {
               leadingImgPath: 'assets/icons/EventDetailsIcons/giftbox.png',
               trailingImgPath: 'assets/icons/EventDetailsIcons/next.png',
               isGoToGiftList: true,
+              event: widget.event,
             ),
             const SizedBox(
               height: 10,

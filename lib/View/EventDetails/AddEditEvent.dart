@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
@@ -185,6 +186,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 label: widget.event == null ? 'Add' : 'Save',
                 onPressed: () async {
                   if (eventFormKey.currentState?.validate() ?? false) {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     final event = Event(
                         id: widget.event?.id,
                         name: nameController.text,
@@ -197,10 +199,24 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                             ? 'upcoming'
                             : widget.event!.status,
                         isPublished: 0);
-                    bool result = await EventController.addEvent(event);
+                    bool result = widget.event == null
+                        ? await EventController.addEvent(event)
+                        : await EventController.updateEvent(event);
                     if (result) {
+                      toastification.show(
+                          icon: Icon(
+                            Icons.check_circle,
+                            color: const Color.fromARGB(255, 73, 225, 71),
+                          ),
+                          alignment: Alignment.topCenter,
+                          autoCloseDuration: const Duration(seconds: 5),
+                          context: context,
+                          title: widget.event == null
+                              ? Text('Event added successfully')
+                              : Text('Event edited successfully'));
                       print(
                           'Event saved: ${event.name}, ${event.date} ${event.id} ${event.userId} ${event.category} ${event.status} ${event.isPublished} ${event.location}');
+                      context.goNamed("myEvents");
                     } else {
                       toastification.show(
                           alignment: Alignment.topCenter,

@@ -232,17 +232,7 @@ class LocalDB {
         await db.query('Gifts', where: 'eventId = ?', whereArgs: [eventId]);
     return List.generate(
       maps.length,
-      (i) => Gift(
-        id: maps[i]['id'].toString(),
-        name: maps[i]['name'],
-        description: maps[i]['description'],
-        category: maps[i]['category'],
-        price: maps[i]['price'],
-        imageUrl: maps[i]['imageUrl'],
-        status: maps[i]['status'],
-        eventId: maps[i]['eventId'].toString(),
-        isPublished: maps[i]['isPublished'],
-      ),
+      (i) => Gift.fromJson(maps[i]),
     );
   }
 

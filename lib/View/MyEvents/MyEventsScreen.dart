@@ -104,7 +104,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                 future: EventController.getEvents(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    // Show a loading spinner while waiting for the data
                     return Center(
                       child: LoadingAnimationWidget.threeArchedCircle(
                         color: Colors.blue.shade400,
@@ -112,13 +111,11 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    // Show error if something went wrong
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-                    // Show message if no events are available
                     return Center(child: Text('No events available.'));
                   } else {
-                    print(EventController.events);
+                    //print(EventController.events);
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),

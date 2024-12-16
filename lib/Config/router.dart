@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Model/Event.dart';
+import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/EditInfo/EditInfoScreen.dart';
 import 'package:hedieaty/View/EventDetails/AddEditEvent.dart';
 import 'package:hedieaty/View/EventDetails/EventDetailsScreen.dart';
@@ -74,14 +75,22 @@ class RouterClass {
             path: 'GiftList',
             name: 'giftList',
             builder: (BuildContext context, GoRouterState state) {
-              return const Giftlistscreen();
+              final event = state.extra as Event?;
+              return Giftlistscreen(
+                event: event,
+              );
             },
           ),
           GoRoute(
             path: 'GiftDetails',
             name: 'giftDetails',
             builder: (BuildContext context, GoRouterState state) {
-              return const GiftDetailsScreen();
+              final Map<String, dynamic> args =
+                  state.extra as Map<String, dynamic>;
+              final Gift? gift = args['gift'] as Gift?;
+              final Event event = args['event'] as Event;
+
+              return GiftDetailsScreen(gift: gift, event: event);
             },
           ),
           GoRoute(

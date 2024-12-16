@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Model/Event.dart';
 
 class EventDetailsTile extends StatelessWidget {
   final String text;
   final String leadingImgPath;
   final String? trailingImgPath;
   final bool? isGoToGiftList;
+  final Event? event;
   const EventDetailsTile(
       {super.key,
       required this.text,
       required this.leadingImgPath,
       this.isGoToGiftList,
-      this.trailingImgPath});
+      this.trailingImgPath,
+      this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,9 @@ class EventDetailsTile extends StatelessWidget {
                     height: 35,
                   )),
           onTap: () {
-            isGoToGiftList == null ? null : context.push('/GiftList');
+            isGoToGiftList == null
+                ? null
+                : context.push('/GiftList', extra: event);
           }),
     );
   }

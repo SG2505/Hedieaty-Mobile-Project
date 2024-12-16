@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/View/HomeScreen/AddFriendWidget.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/HomeScreen/FriendTile.dart';
 import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
@@ -25,7 +26,12 @@ class _HomescreenState extends State<Homescreen> {
           appBarActions: [
             IconButton(
                 tooltip: 'Add Friend',
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AddFriendWidget(),
+                  );
+                },
                 icon: Image.asset(
                   'assets/icons/HomeScreenIcons/Add_Friend.png',
                   width: 30,

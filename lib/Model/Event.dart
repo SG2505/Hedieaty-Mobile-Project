@@ -8,6 +8,7 @@ class Event {
   final String? userId;
   String? status;
   final int isPublished;
+  var gifts = [];
 
   Event({
     this.id,

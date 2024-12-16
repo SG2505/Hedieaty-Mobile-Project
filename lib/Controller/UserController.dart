@@ -50,6 +50,7 @@ class UserController {
     var result = await _authservice.signIn(email: email, password: password);
 
     if (result is User) {
+      print("object");
       var userData = await _firebaseUserService.fetchUser(result.uid);
       currentUser = AppUser.fromJson(userData!);
       return true;

@@ -7,23 +7,14 @@ class FirebaseEventService {
 
   Future<void> createEvent(Event event) async {
     try {
-      await eventCollection.add(event.toJson());
+      // make document id as userId_eventId
+      String docId = '${event.userId}_${event.id}';
+      // add the event to Firebase with the custom document id
+      await eventCollection.doc(docId).set(event.toJson());
     } catch (e) {
       throw Exception('Failed to create event: $e');
     }
   }
-
-  // Future<Event?> getEventById(String id) async {
-  //   try {
-  //     DocumentSnapshot doc = await eventCollection.doc(id).get();
-  //     if (doc.exists) {
-  //       return Event.fromJson(doc.data() as Map<String, dynamic>)..id = doc.id;
-  //     }
-  //     return null;
-  //   } catch (e) {
-  //     throw Exception('Failed to fetch event: $e');
-  //   }
-  // }
 
   Future<List<Event>> getEventsByUserId(String userId) async {
     try {
@@ -39,19 +30,17 @@ class FirebaseEventService {
 
   Future<void> updateEvent(Event event) async {
     try {
-      if (event.id != null) {
-        // await eventCollection.doc(event.id).update(event.toJson()); adjuuuuuuuuuuuuuuuuust
-      } else {
-        throw Exception('Event ID is required for updating');
-      }
+      String docId = '${event.userId}_${event.id}';
+      await eventCollection.doc(docId).update(event.toJson());
     } catch (e) {
       throw Exception('Failed to update event: $e');
     }
   }
 
-  Future<void> deleteEvent(String id) async {
+  Future<void> deleteEvent(Event event) async {
     try {
-      await eventCollection.doc(id).delete();
+      String docId = '${event.userId}_${event.id}';
+      await eventCollection.doc(docId).delete();
     } catch (e) {
       throw Exception('Failed to delete event: $e');
     }

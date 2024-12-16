@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:hedieaty/Model/Event.dart';
 
 class EventTile extends StatelessWidget {
@@ -9,14 +10,18 @@ class EventTile extends StatelessWidget {
   final String status;
   final String imgPath;
   final Event event;
-  const EventTile(
-      {super.key,
-      required this.title,
-      required this.imgPath,
-      required this.date,
-      required this.category,
-      required this.status,
-      required this.event});
+  final VoidCallback onDelete; // Add the callback function
+
+  const EventTile({
+    super.key,
+    required this.title,
+    required this.imgPath,
+    required this.date,
+    required this.category,
+    required this.status,
+    required this.event,
+    required this.onDelete, // Pass the callback here
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,9 @@ class EventTile extends StatelessWidget {
                 height: 35,
               ),
         trailing: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              onDelete();
+            },
             icon: Image.asset(
               'assets/icons/EventScreenIcons/delete.png',
               width: 35,

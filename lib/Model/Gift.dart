@@ -16,7 +16,7 @@ class Gift {
       required this.category,
       required this.price,
       this.imageUrl,
-      this.status = 'available',
+      required this.status,
       required this.eventId,
       required this.isPublished});
 

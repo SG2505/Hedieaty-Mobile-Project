@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
@@ -26,7 +27,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
           appBarActions: [
             IconButton(
                 tooltip: 'Add Event',
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed("addEditEvents");
+                },
                 icon: Image.asset(
                   'assets/icons/HomeScreenIcons/Add_Event.png',
                   width: 30,
@@ -131,6 +134,11 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                           category: event.category!,
                           status: event.status!,
                           event: event,
+                          onDelete: () {
+                            setState(() {
+                              EventController.deleteEvent(event);
+                            });
+                          },
                         );
                       },
                     );

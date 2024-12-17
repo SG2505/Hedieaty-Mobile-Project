@@ -10,9 +10,9 @@ late AppUser currentUser;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeFirebase();
-  //final localDB = LocalDB();
+  final localDB = LocalDB();
   //await localDB.resetDatabase2();
-  //await localDB.database; // initializes the db
+  // await localDB.database; // initializes the db
 
   runApp(MyApp());
 }

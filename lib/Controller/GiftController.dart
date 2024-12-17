@@ -39,6 +39,17 @@ class GiftController {
     }
   }
 
+  static Future<bool> deleteAllGiftsByEventId(String id) async {
+    try {
+      await _localDB.deleteGiftsByEventId(id);
+      await _firebaseGiftService.deleteGiftsByEventId(id);
+      return true;
+    } catch (e) {
+      print("Error: $e");
+      return false;
+    }
+  }
+
   static Future<List<Gift>> getGiftsByEventId(String eventId) async {
     try {
       var gifts = await _localDB.getGiftsByEventId(eventId);

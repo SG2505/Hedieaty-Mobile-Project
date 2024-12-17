@@ -216,6 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         label: 'Sign Up',
                         onPressed: () async {
                           if (signUpDetailsFormKey.currentState!.validate()) {
+                            FocusManager.instance.primaryFocus?.unfocus();
                             setState(() {
                               isLoading = true;
                             });

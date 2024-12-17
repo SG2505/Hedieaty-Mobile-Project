@@ -47,6 +47,24 @@ class FirebaseGiftService {
     }
   }
 
+  Future<bool> deleteGiftsByEventId(String eventId) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('gifts')
+          .where('eventId', isEqualTo: eventId)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      return true;
+    } catch (e) {
+      print("Error deleting gifts by eventId: $e");
+      return false;
+    }
+  }
+
   Future<List<Gift>> getGiftsByEvent(String eventId) async {
     try {
       final querySnapshot = await _firestore

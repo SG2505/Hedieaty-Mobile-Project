@@ -69,6 +69,7 @@ class LocalDB {
         status TEXT NOT NULL,
         eventId INTEGER NOT NULL,
         isPublished INTEGER NOT NULL DEFAULT 0,
+        pledgerId TEXT,
         FOREIGN KEY (eventId) REFERENCES Events (id)
       )
     ''');
@@ -205,7 +206,8 @@ class LocalDB {
         'imageUrl': gift.imageUrl,
         'status': gift.status,
         'eventId': gift.eventId,
-        'isPublished': gift.isPublished
+        'isPublished': gift.isPublished,
+        'pledgerId': gift.pledgerId,
       },
     );
   }
@@ -223,7 +225,8 @@ class LocalDB {
         'imageUrl': gift.imageUrl,
         'status': gift.status,
         'eventId': gift.eventId,
-        'isPublished': gift.isPublished
+        'isPublished': gift.isPublished,
+        'pledgerId': gift.pledgerId,
       },
       where: 'id = ?',
       whereArgs: [gift.id],
@@ -243,6 +246,11 @@ class LocalDB {
   Future<void> deleteGift(String id) async {
     final db = await database;
     await db.delete('Gifts', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> deleteGiftsByEventId(String eventId) async {
+    final db = await database;
+    await db.delete('Gifts', where: 'eventId = ?', whereArgs: [eventId]);
   }
 
   // --------- Friends CRUD ---------

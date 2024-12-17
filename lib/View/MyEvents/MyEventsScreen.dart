@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Controller/EventController.dart';
+import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/MyEvents/EventTile.dart';
@@ -136,6 +137,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                           event: event,
                           onDelete: () {
                             setState(() {
+                              GiftController.deleteAllGiftsByEventId(event.id);
                               EventController.deleteEvent(event);
                             });
                           },

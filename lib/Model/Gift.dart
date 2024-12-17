@@ -8,6 +8,7 @@ class Gift {
   String status;
   final String eventId;
   final int isPublished;
+  String? pledgerId;
 
   Gift(
       {required this.id,
@@ -18,7 +19,8 @@ class Gift {
       this.imageUrl,
       required this.status,
       required this.eventId,
-      required this.isPublished});
+      required this.isPublished,
+      this.pledgerId});
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,6 +33,7 @@ class Gift {
       'status': status,
       'eventId': eventId,
       'isPublished': isPublished,
+      'pledgerId': pledgerId
     };
   }
 
@@ -44,6 +47,7 @@ class Gift {
         imageUrl: json['imageUrl'],
         status: json['status'] ?? 'available',
         eventId: json['eventId'],
-        isPublished: json['isPublished']);
+        isPublished: json['isPublished'],
+        pledgerId: json['pledgerId']);
   }
 }

@@ -74,6 +74,10 @@ class ThemeClass {
         contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
         filled: true,
         fillColor: Color.fromRGBO(230, 255, 252, 1),
+        disabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),
+            borderRadius: BorderRadius.circular(35)),
         enabledBorder: OutlineInputBorder(
             borderSide:
                 BorderSide(width: 3, color: Color.fromRGBO(111, 224, 248, 1)),

@@ -49,7 +49,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime currentDate = DateTime.now();
     final DateTime initialDate = selectedDate ?? currentDate;
-    final DateTime firstDate = DateTime(1960);
+    final DateTime firstDate = DateTime.now();
     final DateTime lastDate = DateTime(2200);
 
     final DateTime? pickedDate = await showDatePicker(

@@ -53,7 +53,7 @@ class GeneralTile extends StatelessWidget {
                     height: 35,
                   )),
           onTap: () {
-            tileFucntion;
+            tileFucntion!();
           }),
     );
   }

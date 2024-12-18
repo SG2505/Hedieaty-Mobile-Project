@@ -78,6 +78,7 @@ class LocalDB {
       CREATE TABLE Friends(
         userId TEXT NOT NULL,
         friendId TEXT NOT NULL,
+        createdAt TEXT NOT NULL,
         PRIMARY KEY (userId, friendId)
       )
     ''');
@@ -256,11 +257,13 @@ class LocalDB {
   // --------- Friends CRUD ---------
 
   // Insert a friend relationship (userId and friendId)
-  Future<int> insertFriend(String userId, String friendId) async {
+  Future<int> insertFriend(
+      String userId, String friendId, String createdAt) async {
     final db = await database;
     return await db.insert('Friends', {
       'userId': userId,
       'friendId': friendId,
+      'createdAt': createdAt,
     });
   }
 
@@ -280,5 +283,23 @@ class LocalDB {
     final db = await database;
     await db.delete('Friends',
         where: 'userId = ? AND friendId = ?', whereArgs: [userId, friendId]);
+  }
+
+  Future<String?> getLatestFriendshipCreatedAt(String userId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'Friends',
+      where: 'userId = ?',
+      whereArgs: [userId],
+      orderBy: 'createdAt DESC', // Sort by createdAt in descending order
+      limit: 1, // Fetch only the most recent record
+    );
+
+    if (maps.isNotEmpty) {
+      return maps
+          .first['createdAt']; // Return the 'createdAt' field as a String
+    } else {
+      return null; // No friendships found
+    }
   }
 }

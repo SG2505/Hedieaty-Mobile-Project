@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Model/AppUser.dart';
+import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GeneralTile.dart';
 
 class FriendEventsScreen extends StatefulWidget {
-  const FriendEventsScreen({super.key});
+  final List<Event>? events;
+  final AppUser friend;
+  const FriendEventsScreen({super.key, this.events, required this.friend});
 
   @override
   State<FriendEventsScreen> createState() => _FriendEventsScreenState();
@@ -17,7 +21,9 @@ class _FriendEventsScreenState extends State<FriendEventsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          appBarActions: [], title: "John's Events", isTherebackButton: true),
+          appBarActions: [],
+          title: "${widget.friend.name}'s Events",
+          isTherebackButton: true),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,38 +82,31 @@ class _FriendEventsScreenState extends State<FriendEventsScreen> {
             SizedBox(
               height: 20,
             ),
-            GeneralTile(
-              text: 'Birthday',
-              subtitle: 'Date: 15/10/2024\nCategory: Birthdays',
-              leadingImgPath: 'assets/icons/CategoryIcons/birthday.png',
-              trailingImgPath: 'assets/icons/EventDetailsIcons/next.png',
-              iconFucntion: () => context.push('/FriendGiftList'),
-              tileFucntion: () => context.push('/FriendGiftList'),
-            ),
-            GeneralTile(
-              text: "John's Wedding",
-              subtitle: 'Date: 15/10/2024\nCategory: Wedding',
-              leadingImgPath: 'assets/icons/CategoryIcons/wedding.png',
-              trailingImgPath: 'assets/icons/EventDetailsIcons/next.png',
-              iconFucntion: () => context.push('/FriendGiftList'),
-              tileFucntion: () => context.push('/FriendGiftList'),
-            ),
-            GeneralTile(
-              text: 'Anniversary',
-              subtitle: 'Date: 15/10/2024\nCategory: Birthdays',
-              leadingImgPath: 'assets/icons/CategoryIcons/anniversary.png',
-              trailingImgPath: 'assets/icons/EventDetailsIcons/next.png',
-              iconFucntion: () => context.push('/FriendGiftList'),
-              tileFucntion: () => context.push('/FriendGiftList'),
-            ),
-            GeneralTile(
-              text: 'Birthday',
-              subtitle: 'Date: 15/10/2024\nCategory: Birthdays',
-              leadingImgPath: 'assets/icons/CategoryIcons/party.png',
-              trailingImgPath: 'assets/icons/EventDetailsIcons/next.png',
-              iconFucntion: () => context.push('/FriendGiftList'),
-              tileFucntion: () => context.push('/FriendGiftList'),
-            ),
+            widget.events == null || widget.events!.isEmpty
+                ? Center(
+                    child: Text("${widget.friend.name} has no events"),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: widget.events!.length,
+                    itemBuilder: (context, index) {
+                      print(widget.events![0]);
+                      var date = widget.events![index].date;
+                      return GeneralTile(
+                        text: widget.events![index].name!,
+                        subtitle: "${date.day}-${date.month}${date.year}",
+                        leadingImgPath:
+                            'assets/icons/CategoryIcons/birthday.png',
+                        trailingImgPath:
+                            'assets/icons/EventDetailsIcons/next.png',
+                        iconFucntion: () => context.push('/FriendGiftList',
+                            extra: widget.events![index]),
+                        tileFucntion: () => context.push('/FriendGiftList',
+                            extra: widget.events![index]),
+                      );
+                    },
+                  ),
           ],
         ),
       ),

@@ -44,7 +44,7 @@ class GeneralSwitchListTile extends StatelessWidget {
           subtitile,
           style: Theme.of(context).textTheme.labelMedium,
         ),
-        trailing: hideToggle == null
+        trailing: hideToggle == false
             ? CupertinoSwitch(
                 activeColor: Color.fromRGBO(55, 154, 189, 1),
                 value: toggleValue, // Current state of the toggle

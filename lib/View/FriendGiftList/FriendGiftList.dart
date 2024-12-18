@@ -1,10 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Config/theme.dart';
+import 'package:hedieaty/Controller/GiftController.dart';
+import 'package:hedieaty/Model/Event.dart';
+import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GeneralSwitchListTile.dart';
+import 'package:hedieaty/main.dart';
 
 class FriendGiftListScreen extends StatefulWidget {
-  const FriendGiftListScreen({super.key});
+  final Event event;
+  const FriendGiftListScreen({super.key, required this.event});
 
   @override
   State<FriendGiftListScreen> createState() => _FriendGiftListScreenState();
@@ -17,7 +24,7 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
     return Scaffold(
       appBar: CustomAppBar(
           appBarActions: [],
-          title: "Friend's Gift List",
+          title: "${widget.event.name} gift list",
           isTherebackButton: true),
       body: SingleChildScrollView(
         child: Column(
@@ -118,35 +125,52 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
             const SizedBox(
               height: 20,
             ),
-            GeneralSwitchListTile(
-                tileColor: ThemeClass.yellowThemeColor,
-                text: 'PS5',
-                leadingImgPath: 'assets/icons/Miscellaneous/ps4.png',
-                subtitile: 'Category: Electronics',
-                toggleValue: true,
-                onToggleChanged: (value) {}),
-            GeneralSwitchListTile(
-                tileColor: ThemeClass.greenThemeColor,
-                text: 'To Mars Book',
-                leadingImgPath: 'assets/icons/Miscellaneous/book.png',
-                subtitile: 'Category: Books',
-                toggleValue: false,
-                hideToggle: true,
-                onToggleChanged: (value) {}),
-            GeneralSwitchListTile(
-                tileColor: ThemeClass.blueThemeColor,
-                text: 'Chessboard',
-                leadingImgPath: 'assets/icons/Miscellaneous/chess.png',
-                subtitile: 'Category: Games',
-                toggleValue: false,
-                onToggleChanged: (value) {}),
-            GeneralSwitchListTile(
-                tileColor: ThemeClass.blueThemeColor,
-                text: 'Flashlight',
-                leadingImgPath: 'assets/icons/Miscellaneous/flashlight.png',
-                subtitile: 'Category: Tols',
-                toggleValue: false,
-                onToggleChanged: (value) {}),
+            FirestoreListView<Map<String, dynamic>>(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              query: FirebaseFirestore.instance
+                  .collection('gifts')
+                  .where('eventId', isEqualTo: widget.event.id),
+              itemBuilder: (context, snapshot) {
+                final giftData = snapshot.data();
+                final gift = Gift.fromJson(giftData);
+                bool isPledgedByOtherUser =
+                    gift.pledgerId != null && gift.pledgerId != currentUser.id;
+
+                return GeneralSwitchListTile(
+                  hideToggle: isPledgedByOtherUser ? true : false,
+                  tileColor: gift.status == 'Available'
+                      ? ThemeClass.blueThemeColor
+                      : gift.pledgerId == currentUser.id
+                          ? ThemeClass.yellowThemeColor
+                          : ThemeClass.greenThemeColor,
+                  text: gift.name,
+                  leadingImgPath: 'assets/icons/Miscellaneous/ps4.png',
+                  subtitile: "Category: ${gift.category}, Price: ${gift.price}",
+                  toggleValue: gift.status == 'Available' ? false : true,
+                  onToggleChanged: (value) async {
+                    if (value) {
+                      gift.status = "Pledged";
+                      gift.pledgerId = currentUser.id;
+                      print(gift.id);
+                    } else {
+                      gift.status = "Available";
+                      gift.pledgerId = null;
+                    }
+                    await GiftController.updateGift(gift);
+                    setState(() {});
+                  },
+                );
+              },
+              emptyBuilder: (context) {
+                return Center(
+                  child: Text(
+                    'No gifts yet for this event!',
+                    style: ThemeClass.theme.textTheme.bodyLarge,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

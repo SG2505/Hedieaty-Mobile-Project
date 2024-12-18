@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Model/AppUser.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/EditInfo/EditInfoScreen.dart';
@@ -42,7 +43,11 @@ class RouterClass {
         path: '/',
         name: 'home',
         builder: (BuildContext context, GoRouterState state) {
-          return const Homescreen();
+          final Map<String, dynamic>? friendMap =
+              state.extra as Map<String, dynamic>?;
+          return Homescreen(
+            extraFriendData: friendMap,
+          );
         },
         routes: [
           // Nested routes under Home
@@ -118,14 +123,24 @@ class RouterClass {
             path: 'FriendGiftList',
             name: 'friendGiftList',
             builder: (BuildContext context, GoRouterState state) {
-              return const FriendGiftListScreen();
+              final event = state.extra as Event;
+              return FriendGiftListScreen(
+                event: event,
+              );
             },
           ),
           GoRoute(
             path: 'FriendEvents',
             name: 'friendEvents',
             builder: (BuildContext context, GoRouterState state) {
-              return const FriendEventsScreen();
+              final extra = state.extra as Map<String, dynamic>?;
+              final events = extra?['events'] as List<Event>?;
+              final friend = extra?['friend'] as AppUser;
+
+              return FriendEventsScreen(
+                events: events,
+                friend: friend,
+              );
             },
           ),
         ],

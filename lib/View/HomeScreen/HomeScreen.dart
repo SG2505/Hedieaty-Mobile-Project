@@ -10,7 +10,8 @@ import 'package:hedieaty/main.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Homescreen extends StatefulWidget {
-  const Homescreen({super.key});
+  final Map<String, dynamic>? extraFriendData;
+  const Homescreen({super.key, this.extraFriendData});
 
   @override
   State<Homescreen> createState() => _HomescreenState();
@@ -23,38 +24,21 @@ class _HomescreenState extends State<Homescreen> {
   bool isLoading = true;
   bool isInitialLoad = true;
   bool isFetchingMore = false;
+  bool hasMoreData = true;
   ScrollController scrollController = ScrollController();
-
-  final List<String> friendIds = [
-    "22r8ZhByxaTvYokxXQt6Lnb9kfE2",
-    "43XMAiX1PBa96DKtXjhThXL5idr2",
-    "55CyPf8rsofr7889Kqqa7ILLeQq2",
-    "9LAKb3anTEcKtt4CmZNfEuHAq8g1",
-    "BTAB1q0usTThQVRQEpezjmk1dB63",
-    "D7WwXCX02SNYbFdtszHLLipjILF3",
-    "GFNe4EKXvrY62gxVdnAdhSuiMZu2",
-    "apDJdrL93EgLhWRcDQYF1K93pz83",
-    "bEYkVN28fDPKZwvLhKDCkcDuVc23",
-    "hOvEP6fsNweufzNpwEXR7U44FxG3",
-    "oGaKq49KUIZUZY9DyvkMb8ZOJSg1",
-    "vnbP3BOGRmM4IF62kEhNzxTsec43",
-    "yLtpcjYKyfXzTutFO0N3MZfqqIi1",
-    "UrQB4wKJVFOs3HxlCiZL072V6Mr2",
-    "SOIz03rT6YRzQmbvBtbBxfc1psw1",
-    "vWiWVvdJoLVfDeQ3jLgOEOf1fTB3"
-  ];
 
   @override
   void initState() {
     super.initState();
-    _loadFriendsData();
+    loadFriendsData();
     // Listen to scroll events to handle pagination
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
         // Load more data when reaching the bottom if not already fetching
-        if (!isFetchingMore) {
-          _loadFriendsData();
+
+        if (!isFetchingMore && hasMoreData) {
+          loadFriendsData();
         }
       }
     });
@@ -68,6 +52,10 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.extraFriendData != null &&
+        !friendsData.contains(widget.extraFriendData)) {
+      friendsData.insert(0, widget.extraFriendData!);
+    }
     return Scaffold(
         appBar: CustomAppBar(
           title: 'Hedieaty',
@@ -80,6 +68,7 @@ class _HomescreenState extends State<Homescreen> {
                     context: context,
                     builder: (context) => const AddFriendWidget(),
                   );
+                  context.pushReplacementNamed('home');
                 },
                 icon: Image.asset(
                   'assets/icons/HomeScreenIcons/Add_Friend.png',
@@ -181,15 +170,14 @@ class _HomescreenState extends State<Homescreen> {
                         final friendData = friendsData[index];
                         final friend = friendData['friend'];
                         final events = friendData['events'];
-                        final gifts = friendData['gifts'];
-
                         return Friendtile(
                           title: friend.name,
-                          subtitle:
-                              '${events.length} events, ${gifts.length} gifts',
+                          subtitle: '${events.length} events',
                           imgPath: friend.profilePictureUrl ??
                               'assets/icons/HomeScreenIcons/user_avatar.png',
                           numOfEvents: events.length,
+                          events: events,
+                          friend: friend,
                         );
                       },
                     ),
@@ -205,19 +193,26 @@ class _HomescreenState extends State<Homescreen> {
         ));
   }
 
-  Future<void> _loadFriendsData() async {
+  Future<void> loadFriendsData() async {
+    if (isFetchingMore || !hasMoreData) return;
     setState(() {
-      isFetchingMore = true; // Set flag to true to prevent multiple triggers
+      if (isInitialLoad) {
+        isLoading = true; // Show initial loading widget
+      }
+      isFetchingMore = true;
     });
-
     try {
-      final fetchedData = await FriendController.loadFriendsData(friendIds,
-          isInitialLoad: isInitialLoad);
+      final fetchedData =
+          await FriendController.loadFriendsData(isInitialLoad: isInitialLoad);
 
       if (fetchedData.isNotEmpty) {
         setState(() {
           friendsData.addAll(fetchedData);
           isInitialLoad = false;
+        });
+      } else {
+        setState(() {
+          hasMoreData = false; // No more data to fetch
         });
       }
     } catch (e) {

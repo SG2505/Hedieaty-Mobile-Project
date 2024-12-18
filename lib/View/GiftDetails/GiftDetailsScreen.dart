@@ -27,6 +27,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController statusController = TextEditingController();
   final giftDetailsFormKey = GlobalKey<FormState>();
+  bool isPledged = false;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
       }
       categoryController.text = widget.gift!.category;
       statusController.text = widget.gift!.status;
+      isPledged = widget.gift!.status == 'Pledged';
     }
   }
 
@@ -47,7 +49,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          appBarActions: widget.gift != null
+          appBarActions: widget.gift != null && isPledged == false
               ? [
                   IconButton(
                     onPressed: () {
@@ -97,6 +99,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                 width: 0.83.sw,
                 height: 0.08.sh,
                 child: TextFormField(
+                  enabled: !isPledged,
                   controller: nameController,
                   decoration: ThemeClass.textFormFieldDecoration(),
                   validator: (value) {
@@ -113,6 +116,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                 width: 0.83.sw,
                 height: 0.08.sh,
                 child: TextFormField(
+                  enabled: !isPledged,
                   controller: priceController,
                   keyboardType: TextInputType.numberWithOptions(),
                   decoration: ThemeClass.textFormFieldDecoration(),
@@ -129,6 +133,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
               ///////////////category dropdown/////////
               TextFieldLable(text: 'Category'),
               DropdownMenu(
+                enabled: !isPledged,
                 menuHeight: 200,
                 initialSelection:
                     widget.gift == null ? 'Electronics' : widget.gift!.category,
@@ -151,6 +156,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
               ////////////////status dropdown////////////
               TextFieldLable(text: 'Status'),
               DropdownMenu(
+                  enabled: !isPledged,
                   initialSelection:
                       widget.gift == null ? 'Available' : widget.gift!.status,
                   controller: statusController,
@@ -173,6 +179,7 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                   minHeight: 0.08.sh, // Initial height
                 ),
                 child: TextFormField(
+                  enabled: !isPledged,
                   controller: descriptionController,
                   maxLines: null,
                   decoration: ThemeClass.textFormFieldDecoration(),
@@ -181,54 +188,58 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
               const SizedBox(
                 height: 20,
               ),
-              GradientButton(
-                  width: 0.3.sw,
-                  height: 0.05.sh,
-                  label: widget.gift == null ? 'Save' : 'Edit',
-                  onPressed: () async {
-                    if (giftDetailsFormKey.currentState!.validate()) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      print("hello");
-                      print(widget.event!.id);
-                      // print(widget.gift!.name);
-                      var uuid = Uuid();
-                      final gift = Gift(
-                        id: widget.gift == null ? uuid.v4() : widget.gift!.id,
-                        name: nameController.text,
-                        category: categoryController.text,
-                        price: double.parse(priceController.text.trim()),
-                        eventId: widget.event!.id,
-                        isPublished: 0,
-                        description: descriptionController.text,
-                        status: statusController.text,
-                      );
+              isPledged
+                  ? Container()
+                  : GradientButton(
+                      width: 0.3.sw,
+                      height: 0.05.sh,
+                      label: widget.gift == null ? 'Save' : 'Edit',
+                      onPressed: () async {
+                        if (giftDetailsFormKey.currentState!.validate()) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          print("hello");
+                          print(widget.event!.id);
+                          // print(widget.gift!.name);
+                          var uuid = Uuid();
+                          final gift = Gift(
+                            id: widget.gift == null
+                                ? uuid.v4()
+                                : widget.gift!.id,
+                            name: nameController.text,
+                            category: categoryController.text,
+                            price: double.parse(priceController.text.trim()),
+                            eventId: widget.event!.id,
+                            isPublished: 0,
+                            description: descriptionController.text,
+                            status: statusController.text,
+                          );
 
-                      bool result = widget.gift == null
-                          ? await GiftController.addGift(gift)
-                          : await GiftController.updateGift(gift);
-                      if (result) {
-                        toastification.show(
-                            icon: Icon(
-                              Icons.check_circle,
-                              color: const Color.fromARGB(255, 73, 225, 71),
-                            ),
-                            alignment: Alignment.topCenter,
-                            autoCloseDuration: const Duration(seconds: 5),
-                            context: context,
-                            title: widget.gift == null
-                                ? Text('Gift added successfully')
-                                : Text('Gift edited successfully'));
+                          bool result = widget.gift == null
+                              ? await GiftController.addGift(gift)
+                              : await GiftController.updateGift(gift);
+                          if (result) {
+                            toastification.show(
+                                icon: Icon(
+                                  Icons.check_circle,
+                                  color: const Color.fromARGB(255, 73, 225, 71),
+                                ),
+                                alignment: Alignment.topCenter,
+                                autoCloseDuration: const Duration(seconds: 5),
+                                context: context,
+                                title: widget.gift == null
+                                    ? Text('Gift added successfully')
+                                    : Text('Gift edited successfully'));
 
-                        context.pop();
-                      } else {
-                        toastification.show(
-                            alignment: Alignment.topCenter,
-                            autoCloseDuration: const Duration(seconds: 5),
-                            context: context,
-                            title: Text('Failed to add event'));
-                      }
-                    }
-                  }),
+                            context.pop();
+                          } else {
+                            toastification.show(
+                                alignment: Alignment.topCenter,
+                                autoCloseDuration: const Duration(seconds: 5),
+                                context: context,
+                                title: Text('Failed to add event'));
+                          }
+                        }
+                      }),
               const SizedBox(
                 height: 20,
               ),

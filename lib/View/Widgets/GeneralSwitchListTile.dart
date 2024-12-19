@@ -52,11 +52,13 @@ class GeneralSwitchListTile extends StatelessWidget {
           text,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        subtitle: Text(
-          textAlign: TextAlign.start,
-          subtitile,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        subtitle: subtitile == ''
+            ? null
+            : Text(
+                textAlign: TextAlign.start,
+                subtitile,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
         trailing: hideToggle == false
             ? CupertinoSwitch(
                 activeColor: Color.fromRGBO(55, 154, 189, 1),

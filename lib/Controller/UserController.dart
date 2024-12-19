@@ -28,7 +28,7 @@ class UserController {
         email: email,
         phoneNumber: phoneNumber,
         profilePictureUrl: profilePictureUrl,
-        preferences: preferences,
+        preferences: {},
       );
 
       await _firebaseUserService.createUser(newUser);
@@ -66,7 +66,7 @@ class UserController {
     required String email,
     required String phoneNumber,
     String? profilePictureUrl,
-    Map<String, dynamic>? preferences,
+    required Map<String, dynamic> preferences,
   }) async {
     try {
       // Update the user in Firebase

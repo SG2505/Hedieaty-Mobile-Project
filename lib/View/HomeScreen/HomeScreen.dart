@@ -31,6 +31,7 @@ class _HomescreenState extends State<Homescreen> {
   @override
   void initState() {
     super.initState();
+    autoSync = currentUser.preferences['autoSync'] ?? 1;
     fcmTokenUpdate();
     loadFriendsData();
     // Listen to scroll events to handle pagination

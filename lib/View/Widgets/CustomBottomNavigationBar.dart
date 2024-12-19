@@ -31,7 +31,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       backgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
       behaviour: SnakeBarBehaviour.floating,
       snakeShape: SnakeShape.indicator,
-      snakeViewColor: Color.fromRGBO(135, 217, 250, 1),
+      snakeViewColor: Color.fromRGBO(48, 49, 50, 1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
       padding: EdgeInsets.all(8),
       selectedItemColor: Color.fromRGBO(135, 217, 250, 1),
@@ -54,7 +54,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             context.pushNamed('myProfile'); // Navigate to profile
             break;
           case 3:
-            context.pushNamed('/settings'); // Navigate to settings
+            context.pushNamed('settings'); // Navigate to settings
             break;
           default:
             break;

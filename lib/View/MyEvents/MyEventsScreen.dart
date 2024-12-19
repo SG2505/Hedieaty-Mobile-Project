@@ -6,7 +6,9 @@ import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/MyEvents/EventTile.dart';
 import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
+import 'package:hedieaty/main.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:toastification/toastification.dart';
 
 class MyEventsScreen extends StatefulWidget {
   const MyEventsScreen({super.key});
@@ -135,11 +137,24 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                           category: event.category!,
                           status: event.status!,
                           event: event,
-                          onDelete: () {
-                            setState(() {
-                              GiftController.deleteAllGiftsByEventId(event.id);
-                              EventController.deleteEvent(event);
-                            });
+                          onDelete: () async {
+                            if (autoSync == 0) {
+                              toastification.show(
+                                  context: context,
+                                  autoCloseDuration: Duration(seconds: 5),
+                                  alignment: Alignment.topCenter,
+                                  icon: Icon(
+                                    Icons.cancel_rounded,
+                                    color: Colors.red,
+                                  ),
+                                  title: Text(
+                                      "Can't Delete When Auto Sync is off"));
+                            } else {
+                              await GiftController.deleteAllGiftsByEventId(
+                                  event.id);
+                              await EventController.deleteEvent(event);
+                              setState(() {});
+                            }
                           },
                         );
                       },

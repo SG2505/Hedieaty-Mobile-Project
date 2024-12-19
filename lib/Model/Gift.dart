@@ -7,7 +7,7 @@ class Gift {
   String? imageUrl;
   String status;
   final String eventId;
-  final int isPublished;
+  int isPublished;
   String? pledgerId;
 
   Gift(

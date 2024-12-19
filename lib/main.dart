@@ -8,6 +8,7 @@ import 'package:hedieaty/Model/AppUser.dart';
 import 'package:hedieaty/SQL_Local/LocalDB.dart';
 
 late AppUser currentUser;
+late int autoSync;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

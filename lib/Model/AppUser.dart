@@ -4,7 +4,7 @@ class AppUser {
   final String email;
   final String phoneNumber;
   String? profilePictureUrl;
-  Map<String, dynamic>? preferences;
+  Map<String, dynamic> preferences;
   String? deviceMessageToken;
 
   AppUser(
@@ -13,7 +13,7 @@ class AppUser {
       required this.phoneNumber,
       this.id,
       this.profilePictureUrl,
-      this.preferences,
+      required this.preferences,
       this.deviceMessageToken});
 
   // Convert User object to JSON for storing in Firebase

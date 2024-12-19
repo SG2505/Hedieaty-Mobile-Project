@@ -8,6 +8,7 @@ import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
+import 'package:hedieaty/main.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
@@ -59,7 +60,19 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
               ? [
                   IconButton(
                     onPressed: () {
-                      deleteGift();
+                      if (autoSync == 0) {
+                        toastification.show(
+                            context: context,
+                            autoCloseDuration: Duration(seconds: 5),
+                            alignment: Alignment.topCenter,
+                            icon: Icon(
+                              Icons.cancel_rounded,
+                              color: Colors.red,
+                            ),
+                            title: Text("Can't Delete When Auto Sync is off"));
+                      } else {
+                        deleteGift();
+                      }
                     },
                     icon: Icon(
                       Icons.delete,
@@ -211,10 +224,8 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                   decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              ////////////description form field///////////
+
+              ////////////Image link form field///////////
               TextFieldLable(text: 'Image Link'),
               Container(
                 width: 0.83.sw,

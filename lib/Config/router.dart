@@ -15,6 +15,7 @@ import 'package:hedieaty/View/Login/LoginScreen.dart';
 import 'package:hedieaty/View/MyEvents/MyEventsScreen.dart';
 import 'package:hedieaty/View/MyPledgedGifts/MyPledgedGiftsScreen.dart';
 import 'package:hedieaty/View/Profile/MyProfileScreen.dart';
+import 'package:hedieaty/View/SettingsScreen/SettingsScreen.dart';
 import 'package:hedieaty/View/SignUp/SignUpScreen.dart';
 
 class RouterClass {
@@ -141,6 +142,13 @@ class RouterClass {
                 events: events,
                 friend: friend,
               );
+            },
+          ),
+          GoRoute(
+            path: 'Settings',
+            name: 'settings',
+            builder: (BuildContext context, GoRouterState state) {
+              return const SettingsScreen();
             },
           ),
         ],

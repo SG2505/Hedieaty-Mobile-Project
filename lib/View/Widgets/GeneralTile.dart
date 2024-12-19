@@ -22,7 +22,7 @@ class GeneralTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
       child: ListTile(
           tileColor: tileColor,
           leading: Uri.tryParse(leadingImgPath)!.hasAbsolutePath

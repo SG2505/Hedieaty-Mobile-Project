@@ -7,7 +7,7 @@ class Event {
   String? category;
   final String? userId;
   String? status;
-  final int isPublished;
+  int isPublished;
   var gifts = [];
 
   Event({

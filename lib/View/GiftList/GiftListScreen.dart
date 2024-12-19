@@ -133,8 +133,8 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: LoadingAnimationWidget.threeArchedCircle(
-                      color: const Color.fromARGB(255, 44, 163, 207),
+                    child: LoadingAnimationWidget.inkDrop(
+                      color: ThemeClass.blueThemeColor,
                       size: 60,
                     ),
                   );

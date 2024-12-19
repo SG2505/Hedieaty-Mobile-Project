@@ -188,6 +188,16 @@ class LocalDB {
     );
   }
 
+  Future<List<Event>> getUnpublishedEvents() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('Events', where: 'isPublished = ?', whereArgs: [0]);
+    return List.generate(
+      maps.length,
+      (i) => Event.fromJson(maps[i]),
+    );
+  }
+
   Future<void> deleteEvent(String id) async {
     final db = await database;
     await db.delete('Events', where: 'id = ?', whereArgs: [id]);
@@ -238,6 +248,16 @@ class LocalDB {
     final db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('Gifts', where: 'eventId = ?', whereArgs: [eventId]);
+    return List.generate(
+      maps.length,
+      (i) => Gift.fromJson(maps[i]),
+    );
+  }
+
+  Future<List<Gift>> getUnpublishedGifts() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('Gifts', where: 'isPublished = ?', whereArgs: [0]);
     return List.generate(
       maps.length,
       (i) => Gift.fromJson(maps[i]),

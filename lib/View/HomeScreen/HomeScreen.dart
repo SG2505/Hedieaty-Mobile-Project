@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/FriendController.dart';
+import 'package:hedieaty/Firebase/FCM.dart';
 import 'package:hedieaty/View/HomeScreen/AddFriendWidget.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/HomeScreen/FriendTile.dart';
@@ -30,6 +31,7 @@ class _HomescreenState extends State<Homescreen> {
   @override
   void initState() {
     super.initState();
+    fcmTokenUpdate();
     loadFriendsData();
     // Listen to scroll events to handle pagination
     scrollController.addListener(() {
@@ -223,5 +225,13 @@ class _HomescreenState extends State<Homescreen> {
         isFetchingMore = false; // Reset fetching flag after loading
       });
     }
+  }
+
+  Future<void> fcmTokenUpdate() async {
+    var fcmToken = await FirebaseMessagingService().getFCMToken();
+    print(fcmToken);
+
+    FirebaseMessagingService()
+        .updateFCMToken(userId: currentUser.id, token: fcmToken);
   }
 }

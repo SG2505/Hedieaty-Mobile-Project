@@ -29,11 +29,24 @@ class GeneralSwitchListTile extends StatelessWidget {
       child: ListTile(
         onTap: tileOnTap,
         tileColor: tileColor,
-        leading: Image.asset(
-          leadingImgPath,
-          width: 60,
-          height: 60,
-        ),
+        leading: Uri.tryParse(leadingImgPath)!.hasAbsolutePath
+            ? Image.network(
+                leadingImgPath,
+                width: 70,
+                height: 70,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/icons/Miscellaneous/gift.png',
+                    width: 50,
+                    height: 50,
+                  );
+                },
+              )
+            : Image.asset(
+                leadingImgPath,
+                width: 50,
+                height: 50,
+              ),
         title: Text(
           textAlign: TextAlign.start,
           text,

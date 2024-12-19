@@ -5,15 +5,16 @@ class AppUser {
   final String phoneNumber;
   String? profilePictureUrl;
   Map<String, dynamic>? preferences;
+  String? deviceMessageToken;
 
-  AppUser({
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-    this.id,
-    this.profilePictureUrl,
-    this.preferences,
-  });
+  AppUser(
+      {required this.name,
+      required this.email,
+      required this.phoneNumber,
+      this.id,
+      this.profilePictureUrl,
+      this.preferences,
+      this.deviceMessageToken});
 
   // Convert User object to JSON for storing in Firebase
   Map<String, dynamic> toJson() {
@@ -24,6 +25,7 @@ class AppUser {
       'phoneNumber': phoneNumber,
       'profilePictureUrl': profilePictureUrl,
       'preferences': preferences,
+      'deviceMessageToken': deviceMessageToken
     };
   }
 
@@ -35,7 +37,10 @@ class AppUser {
       email: json['email'] as String,
       phoneNumber: json['phoneNumber'] as String,
       profilePictureUrl: json['profilePictureUrl'] as String?,
-      preferences: Map<String, dynamic>.from(json['preferences'] ?? {}),
+      deviceMessageToken: json['deviceMessageToken'] ?? "",
+      preferences: Map<String, dynamic>.from(
+        json['preferences'] ?? {},
+      ),
     );
   }
 }

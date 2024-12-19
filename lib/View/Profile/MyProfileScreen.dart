@@ -27,17 +27,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           ),
           Material(
             shape: CircleBorder(),
-            color: ThemeClass.blueThemeColor, // Background color
+            color: ThemeClass.blueThemeColor,
             child: InkWell(
-              onTap: () {
-                // Handle tap action
-              },
-              borderRadius: BorderRadius.circular(
-                  90), // Ensures the splash stays circular
-              // Customize splash color if needed
-              // Customize highlight color if needed
+              onTap: () {},
+              borderRadius: BorderRadius.circular(90),
               child: Container(
-                width: 0.41.sw, // Adjust size as needed
+                width: 0.41.sw,
                 height: 0.2.sh,
                 alignment: Alignment.center,
                 child: Text(
@@ -118,6 +113,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             leadingImgPath: 'assets/icons/ProfileScreenIcons/pledgedgift.png',
             trailingImgPath: 'assets/icons/GiftListScreenIcons/next.png',
             iconFucntion: () => context.push('/MyPledgedGifts'),
+            tileFucntion: () => context.push('/MyPledgedGifts'),
           ),
           SizedBox(
             height: 12,
@@ -131,11 +127,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   'My Events',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                GestureDetector(
-                  onTap: () => context.push('/MyEvents'),
+                TextButton(
+                  onPressed: () => context.push('/MyEvents'),
                   child: Text(
                     'Go to my events',
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: TextStyle(
+                        color: Color.fromRGBO(24, 192, 218, 1),
+                        fontFamily: 'League Spartan',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20),
                   ),
                 ),
               ],

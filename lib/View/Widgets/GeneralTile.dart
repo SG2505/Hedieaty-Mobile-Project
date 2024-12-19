@@ -22,14 +22,27 @@ class GeneralTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15.0, 8, 15, 8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       child: ListTile(
           tileColor: tileColor,
-          leading: Image.asset(
-            leadingImgPath,
-            width: 50,
-            height: 50,
-          ),
+          leading: Uri.tryParse(leadingImgPath)!.hasAbsolutePath
+              ? Image.network(
+                  leadingImgPath,
+                  width: 70,
+                  height: 70,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/icons/Miscellaneous/gift.png',
+                      width: 50,
+                      height: 50,
+                    );
+                  },
+                )
+              : Image.asset(
+                  leadingImgPath,
+                  width: 50,
+                  height: 50,
+                ),
           title: Text(
             textAlign: TextAlign.left,
             text,
@@ -52,9 +65,7 @@ class GeneralTile extends StatelessWidget {
                     width: 35,
                     height: 35,
                   )),
-          onTap: () {
-            tileFucntion!();
-          }),
+          onTap: () {}),
     );
   }
 }

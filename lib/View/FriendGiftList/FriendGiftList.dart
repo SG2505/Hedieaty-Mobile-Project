@@ -3,6 +3,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
+import 'package:hedieaty/Firebase/FirebaseFriendService.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
@@ -47,7 +48,7 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
                     onTapOutside: (event) {
                       FocusScope.of(context).unfocus();
                     },
-                    hintText: '  search events',
+                    hintText: '  search gifts',
                     hintStyle: WidgetStatePropertyAll(
                         Theme.of(context).textTheme.bodySmall),
                     textStyle: WidgetStatePropertyAll(
@@ -136,7 +137,7 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
                 final gift = Gift.fromJson(giftData);
                 bool isPledgedByOtherUser =
                     gift.pledgerId != null && gift.pledgerId != currentUser.id;
-
+                //print(gift.imageUrl);
                 return GeneralSwitchListTile(
                   hideToggle: isPledgedByOtherUser ? true : false,
                   tileColor: gift.status == 'Available'
@@ -145,20 +146,55 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
                           ? ThemeClass.yellowThemeColor
                           : ThemeClass.greenThemeColor,
                   text: gift.name,
-                  leadingImgPath: 'assets/icons/Miscellaneous/ps4.png',
-                  subtitile: "Category: ${gift.category}, Price: ${gift.price}",
+                  leadingImgPath: gift.imageUrl == null
+                      ? 'assets/icons/Miscellaneous/gift.png'
+                      : gift.imageUrl!,
+                  subtitile:
+                      "Category: ${gift.category} \nPrice: ${gift.price}",
                   toggleValue: gift.status == 'Available' ? false : true,
                   onToggleChanged: (value) async {
                     if (value) {
                       gift.status = "Pledged";
                       gift.pledgerId = currentUser.id;
+                      await FirebaseFriendService().sendNotification(
+                          userId: widget.event.userId!,
+                          title: "Gift Pledged 🎉",
+                          message:
+                              "${currentUser.name} Pledged ${gift.name} for event ${widget.event.name}");
                       print(gift.id);
                     } else {
                       gift.status = "Available";
                       gift.pledgerId = null;
+                      await FirebaseFriendService().sendNotification(
+                          userId: widget.event.userId!,
+                          title: "Gift Unpledged 😔",
+                          message:
+                              "${currentUser.name} Unpledged ${gift.name} for event ${widget.event.name}");
                     }
                     await GiftController.updateGift(gift);
                     setState(() {});
+                  },
+                  tileOnTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(gift.name),
+                          content: gift.imageUrl == null
+                              ? Image.asset(
+                                  'assets/icons/Miscellaneous/gift.png')
+                              : Image.network(gift.imageUrl!),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 );
               },

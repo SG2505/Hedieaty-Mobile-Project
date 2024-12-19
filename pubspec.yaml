@@ -49,6 +49,10 @@ dependencies:
   intl: ^0.19.0
   uuid: ^4.5.1
   firebase_ui_firestore: ^1.7.0
+  firebase_messaging: ^15.1.6
+  flutter_local_notifications: ^18.0.1
+  http: ^1.2.2
+  googleapis_auth: ^1.6.0
   
 
 
@@ -85,6 +89,7 @@ flutter:
     - assets/icons/NavigationBarIcons/
     - assets/icons/CategoryIcons/
     - assets/icons/Miscellaneous/
+    - assets/keys/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

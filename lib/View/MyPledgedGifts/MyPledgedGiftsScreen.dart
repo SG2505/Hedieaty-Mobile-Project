@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Config/theme.dart';
+import 'package:hedieaty/Firebase/FirebaseGiftService.dart';
+import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GeneralTile.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class MyPledgedGiftsScreen extends StatefulWidget {
   const MyPledgedGiftsScreen({super.key});
@@ -76,37 +80,47 @@ class _MyPledgedGiftsScreenState extends State<MyPledgedGiftsScreen> {
             SizedBox(
               height: 20,
             ),
-            GeneralTile(
-              text: 'PS5',
-              subtitle:
-                  'Friend: John Doe\nEvent: Birthday\nDue Date: 15/10/2024',
-              leadingImgPath: 'assets/icons/Miscellaneous/ps4.png',
-              trailingImgPath: 'assets/icons/Miscellaneous/delete.png',
-              iconFucntion: () {},
-            ),
-            GeneralTile(
-              text: 'To Mars Book',
-              subtitle:
-                  'Friend: John Doe\nEvent: Birthday\nDue Date: 15/10/2024',
-              leadingImgPath: 'assets/icons/Miscellaneous/book.png',
-              trailingImgPath: 'assets/icons/Miscellaneous/delete.png',
-              iconFucntion: () {},
-            ),
-            GeneralTile(
-              text: 'ChessBoard',
-              subtitle:
-                  'Friend: John Doe\nEvent: Birthday\nDue Date: 15/10/2024',
-              leadingImgPath: 'assets/icons/Miscellaneous/chess.png',
-              trailingImgPath: 'assets/icons/Miscellaneous/delete.png',
-              iconFucntion: () {},
-            ),
-            GeneralTile(
-              text: 'To Mars Book',
-              subtitle:
-                  'Friend: John Doe\nEvent: Birthday\nDue Date: 15/10/2024',
-              leadingImgPath: 'assets/icons/Miscellaneous/flashlight.png',
-              trailingImgPath: 'assets/icons/Miscellaneous/delete.png',
-              iconFucntion: () {},
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: FirebaseGiftService().getPledgedGiftsWithEventAndFriend(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                      child: LoadingAnimationWidget.inkDrop(
+                          color: ThemeClass.blueThemeColor, size: 60));
+                } else if (snapshot.hasError ||
+                    !snapshot.hasData ||
+                    snapshot.data!.isEmpty) {
+                  return const Center(child: Text("No pledged gifts found."));
+                }
+
+                final gifts = snapshot.data!;
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(10),
+                  itemCount: gifts.length,
+                  itemBuilder: (context, index) {
+                    final giftEventFreindMap = gifts[index];
+                    final date = giftEventFreindMap['event'].date as DateTime;
+                    return GeneralTile(
+                      text: giftEventFreindMap['gift'].name,
+                      subtitle:
+                          'Friend: ${giftEventFreindMap['friend'].name}\nEvent: ${giftEventFreindMap['event'].name}\nDue Date: ${date.day}-${date.month}-${date.year}',
+                      leadingImgPath: giftEventFreindMap['gift'].imageUrl ??
+                          'assets/icons/LoginScreenIcons/gift.png',
+                      trailingImgPath: 'assets/icons/Miscellaneous/delete.png',
+                      iconFucntion: () async {
+                        final gift = giftEventFreindMap['gift'] as Gift;
+                        gift.status = "Available";
+                        gift.pledgerId = null;
+                        await FirebaseGiftService().updateGift(gift);
+                        setState(() {});
+                      },
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),

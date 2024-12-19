@@ -39,7 +39,7 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
               Icons.add_circle_rounded,
               color: const Color.fromRGBO(50, 48, 48, 1),
             ))
-      ], title: 'My Gift List', isTherebackButton: true),
+      ], title: '${widget.event!.name!} gift list', isTherebackButton: true),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

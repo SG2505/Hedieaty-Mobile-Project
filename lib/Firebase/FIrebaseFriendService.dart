@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hedieaty/Firebase/FCM.dart';
 import 'package:hedieaty/Firebase/FirebaseEventsService.dart';
 import 'package:hedieaty/Model/AppUser.dart';
 import 'package:hedieaty/Model/Event.dart';
@@ -120,6 +121,38 @@ class FirebaseFriendService {
     } catch (e) {
       print(e);
       return {};
+    }
+  }
+
+  Future<String?> getDeviceMessageToken(String userId) async {
+    try {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+
+      if (userDoc.exists) {
+        return userDoc.data()?['deviceMessageToken'] as String?;
+      } else {
+        print("User not found.");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching device message token: $e");
+      return null;
+    }
+  }
+
+  Future<void> sendNotification(
+      {required String userId,
+      required String title,
+      required String message}) async {
+    try {
+      var friendToken = await getDeviceMessageToken(userId);
+      print(friendToken);
+      if (friendToken != null) {
+        await FirebaseMessagingService().sendNotification(
+            targetFCMToken: friendToken, title: title, body: message);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

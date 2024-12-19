@@ -51,9 +51,8 @@ class Friendtile extends StatelessWidget {
           child: Text(
             numOfEvents > 999 ? "+999" : '$numOfEvents',
             style: TextStyle(
-                fontFamily: 'League Spartan',
                 fontWeight: FontWeight.w900,
-                fontSize: 20,
+                fontSize: 25,
                 color: Color.fromRGBO(206, 240, 252, 1)),
           ),
         ),

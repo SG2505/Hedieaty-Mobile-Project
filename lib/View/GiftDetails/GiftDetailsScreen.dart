@@ -8,6 +8,7 @@ import 'package:hedieaty/Model/Gift.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,8 +27,10 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController statusController = TextEditingController();
+  TextEditingController imageLinkController = TextEditingController();
   final giftDetailsFormKey = GlobalKey<FormState>();
   bool isPledged = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -38,6 +41,9 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
       priceController.text = widget.gift!.price.toString();
       if (widget.gift!.description != null) {
         descriptionController.text = widget.gift!.description!;
+      }
+      if (widget.gift!.imageUrl != null) {
+        imageLinkController.text = widget.gift!.imageUrl!;
       }
       categoryController.text = widget.gift!.category;
       statusController.text = widget.gift!.status;
@@ -80,13 +86,33 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                   width: 0.5.sw,
                   height: 0.15.sh,
                   decoration: BoxDecoration(
-                      color: ThemeClass.blueThemeColor,
+                      color: imageLinkController.text == ''
+                          ? ThemeClass.blueThemeColor
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(25)),
                   child: Center(
-                    child: Text(
-                      'Tap to set image',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    child: imageLinkController.text == ''
+                        ? Text(
+                            textAlign: TextAlign.center,
+                            'enter link for image below to view it here',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.network(
+                              imageLinkController.text,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Text(
+                                  'Invalid URL',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(color: Colors.red),
+                                );
+                              },
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -188,58 +214,87 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
               const SizedBox(
                 height: 20,
               ),
+              ////////////description form field///////////
+              TextFieldLable(text: 'Image Link'),
+              Container(
+                width: 0.83.sw,
+                constraints: BoxConstraints(
+                  minHeight: 0.08.sh, // Initial height
+                ),
+                child: TextFormField(
+                  enabled: !isPledged,
+                  controller: imageLinkController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: ThemeClass.textFormFieldDecoration(),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               isPledged
                   ? Container()
-                  : GradientButton(
-                      width: 0.3.sw,
-                      height: 0.05.sh,
-                      label: widget.gift == null ? 'Save' : 'Edit',
-                      onPressed: () async {
-                        if (giftDetailsFormKey.currentState!.validate()) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          print("hello");
-                          print(widget.event!.id);
-                          // print(widget.gift!.name);
-                          var uuid = Uuid();
-                          final gift = Gift(
-                            id: widget.gift == null
-                                ? uuid.v4()
-                                : widget.gift!.id,
-                            name: nameController.text,
-                            category: categoryController.text,
-                            price: double.parse(priceController.text.trim()),
-                            eventId: widget.event!.id,
-                            isPublished: 0,
-                            description: descriptionController.text,
-                            status: statusController.text,
-                          );
+                  : isLoading
+                      ? LoadingAnimationWidget.inkDrop(
+                          color: ThemeClass.blueThemeColor, size: 60)
+                      : GradientButton(
+                          width: 0.3.sw,
+                          height: 0.05.sh,
+                          label: widget.gift == null ? 'Save' : 'Edit',
+                          onPressed: () async {
+                            if (giftDetailsFormKey.currentState!.validate()) {
+                              isLoading = true;
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              print("hello");
+                              print(widget.event!.id);
+                              // print(widget.gift!.name);
+                              var uuid = Uuid();
+                              final gift = Gift(
+                                id: widget.gift == null
+                                    ? uuid.v4()
+                                    : widget.gift!.id,
+                                name: nameController.text,
+                                category: categoryController.text,
+                                price:
+                                    double.parse(priceController.text.trim()),
+                                eventId: widget.event!.id,
+                                isPublished: 0,
+                                description: descriptionController.text,
+                                status: statusController.text,
+                                imageUrl: imageLinkController.text,
+                              );
 
-                          bool result = widget.gift == null
-                              ? await GiftController.addGift(gift)
-                              : await GiftController.updateGift(gift);
-                          if (result) {
-                            toastification.show(
-                                icon: Icon(
-                                  Icons.check_circle,
-                                  color: const Color.fromARGB(255, 73, 225, 71),
-                                ),
-                                alignment: Alignment.topCenter,
-                                autoCloseDuration: const Duration(seconds: 5),
-                                context: context,
-                                title: widget.gift == null
-                                    ? Text('Gift added successfully')
-                                    : Text('Gift edited successfully'));
+                              bool result = widget.gift == null
+                                  ? await GiftController.addGift(gift)
+                                  : await GiftController.updateGift(gift);
+                              if (result) {
+                                toastification.show(
+                                    icon: Icon(
+                                      Icons.check_circle,
+                                      color: const Color.fromARGB(
+                                          255, 73, 225, 71),
+                                    ),
+                                    alignment: Alignment.topCenter,
+                                    autoCloseDuration:
+                                        const Duration(seconds: 5),
+                                    context: context,
+                                    title: widget.gift == null
+                                        ? Text('Gift added successfully')
+                                        : Text('Gift edited successfully'));
 
-                            context.pop();
-                          } else {
-                            toastification.show(
-                                alignment: Alignment.topCenter,
-                                autoCloseDuration: const Duration(seconds: 5),
-                                context: context,
-                                title: Text('Failed to add event'));
-                          }
-                        }
-                      }),
+                                context.pop();
+                              } else {
+                                toastification.show(
+                                    alignment: Alignment.topCenter,
+                                    autoCloseDuration:
+                                        const Duration(seconds: 5),
+                                    context: context,
+                                    title: Text('Failed to add event'));
+                              }
+                              isLoading = false;
+                            }
+                          }),
               const SizedBox(
                 height: 20,
               ),

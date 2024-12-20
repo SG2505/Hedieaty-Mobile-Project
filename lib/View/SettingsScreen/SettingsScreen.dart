@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/UserController.dart';
+import 'package:hedieaty/Firebase/AuthService.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
 import 'package:hedieaty/View/Widgets/GeneralSwitchListTile.dart';
 import 'package:hedieaty/View/Widgets/GeneralTile.dart';
 import 'package:hedieaty/main.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:toastification/toastification.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -80,7 +82,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             text: "Logout",
             leadingImgPath: "assets/icons/Miscellaneous/sign-out.png",
             trailingImgPath: "assets/icons/GiftListScreenIcons/next.png",
-            iconFucntion: () {},
+            iconFucntion: () async {
+              await Authservice().signOut();
+              Restart.restartApp();
+            },
           )
         ],
       ),

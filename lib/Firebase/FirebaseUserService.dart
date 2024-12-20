@@ -46,4 +46,30 @@ class FirebaseUserService {
       return false;
     }
   }
+
+  Future<String?> checkUserExists(String email, String phone) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return 'User with this email or phone number already exists';
+      }
+
+      final phoneQuerySnapshot = await _firestore
+          .collection('users')
+          .where('phoneNumber', isEqualTo: phone)
+          .get();
+
+      if (phoneQuerySnapshot.docs.isNotEmpty) {
+        return 'User with this email or phone number already exists';
+      }
+    } catch (e) {
+      print("Error checking if user exists: $e");
+      return null;
+    }
+    return null;
+  }
 }

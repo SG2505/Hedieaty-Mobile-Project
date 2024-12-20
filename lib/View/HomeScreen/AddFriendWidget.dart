@@ -58,20 +58,23 @@ class _AddFriendWidgetState extends State<AddFriendWidget> {
                         context.pushReplacementNamed('home', extra: friendMap);
                       }
                     }
-
+                    setState(() => isLoading = false);
                     toastification.show(
                         context: context,
                         title: Text(result),
                         autoCloseDuration: const Duration(seconds: 5),
                         alignment: AlignmentDirectional.topCenter,
-                        icon: Icon(
-                          Icons.check_circle_rounded,
-                          color: Colors.green,
-                        ));
+                        icon: result == "Added Friend Successfully"
+                            ? Icon(
+                                Icons.check_circle_rounded,
+                                color: Colors.green,
+                              )
+                            : null);
                   } else {
                     toastification.show(
                         context: context,
                         alignment: AlignmentDirectional.topCenter,
+                        autoCloseDuration: const Duration(seconds: 5),
                         title: Text("Please enter a phone number"));
                   }
                 },

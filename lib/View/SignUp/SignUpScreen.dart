@@ -8,6 +8,7 @@ import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:toastification/toastification.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -220,24 +221,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             setState(() {
                               isLoading = true;
                             });
-                            // All validations passed, proceed with the sign-up logic
-                            print('Sign Up Successful');
-                            print('Name: ${nameController.text}');
-                            print('Email: ${emailController.text}');
-                            print('Phone: ${completePhoneNumber}');
+
                             var message = await UserController.handleSignUp(
                                 name: nameController.text,
-                                email: emailController.text,
+                                email: emailController.text.trim(),
                                 password: passwordController.text,
                                 phoneNumber: completePhoneNumber);
                             print(message);
                             setState(() {
-                              isLoading = false; // Stop loading
+                              isLoading = false;
                             });
-                            context.goNamed('home');
-                          } else {
-                            // Validation failed, errors will automatically display
-                            print('Validation failed');
+                            if (message == 'Sign Up Successful.') {
+                              context.goNamed('home');
+                            } else {
+                              toastification.show(
+                                context: context,
+                                autoCloseDuration: const Duration(seconds: 5),
+                                alignment: Alignment.topCenter,
+                                description: Text(
+                                  message,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                icon: Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                ),
+                              );
+                            }
                           }
                         },
                         width: 0.3.sw,

@@ -19,6 +19,10 @@ class UserController {
     String? profilePictureUrl,
     Map<String, dynamic>? preferences,
   }) async {
+    var check = await _firebaseUserService.checkUserExists(email, phoneNumber);
+    if (check != null) {
+      return "User with this email or phone number already exists";
+    }
     var result = await _authservice.signUp(email: email, password: password);
 
     if (result is User) {

@@ -164,7 +164,7 @@ class FirebaseMessagingService {
 
   void handleNotificationTap(NotificationResponse details) {
     if (details.payload != null) {
-      final data = json.decode(details.payload!);
+      //final data = json.decode(details.payload!);
     }
   }
 }

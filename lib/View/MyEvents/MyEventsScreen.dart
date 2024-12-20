@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Model/Event.dart';
@@ -20,6 +21,16 @@ class MyEventsScreen extends StatefulWidget {
 class _MyEventsScreenState extends State<MyEventsScreen> {
   TextEditingController searchBarController = TextEditingController();
   int currentIndex = 1;
+  String selectedSort = 'name'; // Default sort by name
+  List<Event> events = [];
+  List<Event> filteredEvents = [];
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    searchBarController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +74,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     child: SearchBar(
                       onChanged: (value) {
                         //this set state is used to show and hide the x button
-                        setState(() {});
+                        setState(() {
+                          searchEvents(value);
+                        });
                       },
                       controller: searchBarController,
                       onTapOutside: (event) {
@@ -85,6 +98,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                                 onPressed: () {
                                   setState(() {
                                     searchBarController.clear();
+                                    filteredEvents = List.from(events);
                                   });
                                 },
                                 icon: Icon(Icons.cancel))
@@ -96,7 +110,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     width: 10,
                   ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _showSortDialog();
+                      },
                       icon: Icon(
                         Icons.filter_list_rounded,
                         size: 35,
@@ -111,8 +127,8 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
-                      child: LoadingAnimationWidget.threeArchedCircle(
-                        color: Colors.blue.shade400,
+                      child: LoadingAnimationWidget.inkDrop(
+                        color: ThemeClass.blueThemeColor,
                         size: 60,
                       ),
                     );
@@ -122,12 +138,16 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     return Center(child: Text('No events available.'));
                   } else {
                     //print(EventController.events);
+                    if (events.isEmpty) {
+                      events = snapshot.data!;
+                      filteredEvents = List.from(events);
+                    }
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.length,
+                      itemCount: filteredEvents.length,
                       itemBuilder: (context, index) {
-                        final event = snapshot.data![index];
+                        final event = filteredEvents[index];
                         print(event);
                         return EventTile(
                           title: event.name!,
@@ -153,7 +173,13 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                               await GiftController.deleteAllGiftsByEventId(
                                   event.id);
                               await EventController.deleteEvent(event);
-                              setState(() {});
+
+                              setState(() {
+                                setState(() {
+                                  events.remove(event);
+                                  filteredEvents.remove(event);
+                                });
+                              });
                             }
                           },
                         );
@@ -165,5 +191,96 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             ],
           ),
         ));
+  }
+
+  // Filter the list of events based on the search query
+  void searchEvents(String query) {
+    setState(() {
+      filteredEvents = events
+          .where((event) =>
+              event.name!.toLowerCase().contains(query.toLowerCase()) ||
+              event.category!.toLowerCase().contains(query.toLowerCase()) ||
+              event.status!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void _showSortDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Sort by',
+              style: ThemeClass.theme.textTheme.bodyMedium,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text('Name'),
+                  onTap: () {
+                    setState(() {
+                      selectedSort = 'name';
+                      sortEvents();
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ListTile(
+                  title: Text('Category'),
+                  onTap: () {
+                    setState(() {
+                      selectedSort = 'category';
+                      sortEvents();
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ListTile(
+                  title: Text('Status'),
+                  onTap: () {
+                    setState(() {
+                      selectedSort = 'status';
+                      sortEvents();
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+                const SizedBox(height: 20),
+                ListTile(
+                  title: Text('Date'),
+                  onTap: () {
+                    setState(() {
+                      selectedSort = 'date';
+                      sortEvents();
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  // Sort the events based on the selected option
+  void sortEvents() {
+    if (selectedSort == 'name') {
+      filteredEvents.sort((a, b) => a.name!.compareTo(b.name!));
+    } else if (selectedSort == 'category') {
+      filteredEvents.sort((a, b) => a.category!.compareTo(b.category!));
+    } else if (selectedSort == 'status') {
+      filteredEvents.sort((a, b) => a.status!.compareTo(b.status!));
+    } else if (selectedSort == 'date') {
+      filteredEvents.sort((a, b) => a.date.compareTo(b.date));
+    }
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }

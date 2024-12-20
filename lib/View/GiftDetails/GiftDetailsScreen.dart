@@ -224,8 +224,10 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                   decoration: ThemeClass.textFormFieldDecoration(),
                 ),
               ),
-
-              ////////////Image link form field///////////
+              const SizedBox(
+                height: 20,
+              ),
+              ////////////Image form field///////////
               TextFieldLable(text: 'Image Link'),
               Container(
                 width: 0.83.sw,

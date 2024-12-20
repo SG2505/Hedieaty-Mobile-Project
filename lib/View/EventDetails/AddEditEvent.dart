@@ -34,7 +34,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
   @override
   void initState() {
     super.initState();
-    // If editing an existing event, pre-fill the fields
+
     if (widget.event != null) {
       nameController.text = widget.event!.name!;
       locationController.text = widget.event!.location ?? '';
@@ -45,7 +45,6 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
     }
   }
 
-  // Function to show the DatePicker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime currentDate = DateTime.now();
     final DateTime initialDate = selectedDate ?? currentDate;
@@ -83,23 +82,23 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
               const SizedBox(
                 height: 20,
               ),
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(25),
-                child: Ink(
-                  width: 0.5.sw,
-                  height: 0.15.sh,
-                  decoration: BoxDecoration(
-                      color: ThemeClass.blueThemeColor,
-                      borderRadius: BorderRadius.circular(25)),
-                  child: Center(
-                    child: Text(
-                      'Tap to set image',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ),
-                ),
-              ),
+              // InkWell(
+              //   onTap: () {},
+              //   borderRadius: BorderRadius.circular(25),
+              //   child: Ink(
+              //     width: 0.5.sw,
+              //     height: 0.15.sh,
+              //     decoration: BoxDecoration(
+              //         color: ThemeClass.blueThemeColor,
+              //         borderRadius: BorderRadius.circular(25)),
+              //     child: Center(
+              //       child: Text(
+              //         'Tap to set image',
+              //         style: Theme.of(context).textTheme.bodySmall,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 20,
               ),

@@ -42,8 +42,18 @@ class EventController {
   static Future<List<Event>> getEvents() async {
     try {
       events = await _localDB.getEventsByUserId(currentUser.id!);
-      // add firebase later////////////////////////////
-      print(events.length);
+
+      var firebaseEvents =
+          await firebaseEventService.getEventsByUserId(currentUser.id!);
+
+      for (var firebaseEvent in firebaseEvents) {
+        bool isEventInLocalDB =
+            events.any((localEvent) => localEvent.id == firebaseEvent.id);
+        if (!isEventInLocalDB) {
+          await _localDB.insertEvent(firebaseEvent);
+          events.add(firebaseEvent);
+        }
+      }
       return events;
     } catch (e) {
       print("Error: $e");

@@ -93,16 +93,17 @@ class _MyPledgedGiftsScreenState extends State<MyPledgedGiftsScreen> {
                   return const Center(child: Text("No pledged gifts found."));
                 }
 
-                final gifts = snapshot.data!;
+                final giftsEventsFriends = snapshot.data!;
 
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(10),
-                  itemCount: gifts.length,
+                  itemCount: giftsEventsFriends.length,
                   itemBuilder: (context, index) {
-                    final giftEventFreindMap = gifts[index];
+                    final giftEventFreindMap = giftsEventsFriends[index];
                     final date = giftEventFreindMap['event'].date as DateTime;
+                    final gift = giftEventFreindMap['gift'] as Gift;
                     return GeneralTile(
                       text: giftEventFreindMap['gift'].name,
                       subtitle:
@@ -116,6 +117,28 @@ class _MyPledgedGiftsScreenState extends State<MyPledgedGiftsScreen> {
                         gift.pledgerId = null;
                         await FirebaseGiftService().updateGift(gift);
                         setState(() {});
+                      },
+                      tileFucntion: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(gift.name),
+                              content: gift.imageUrl == null
+                                  ? Image.asset(
+                                      'assets/icons/Miscellaneous/gift.png')
+                                  : Image.network(gift.imageUrl!),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Close'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                     );
                   },

@@ -113,14 +113,33 @@ class LocalDB {
   // --------- AppUser CRUD ---------
   Future<void> insertUser(AppUser user) async {
     final db = await database;
-    await db.insert('Users', user.toJson(),
+    await db.insert(
+        'Users',
+        {
+          'id': user.id,
+          'name': user.name,
+          'email': user.email,
+          'phoneNumber': user.phoneNumber,
+          'profilePictureUrl': user.profilePictureUrl,
+          'preferences': user.preferences,
+        },
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> updateUser(AppUser user) async {
     final db = await database;
-    await db
-        .update('Users', user.toJson(), where: 'id = ?', whereArgs: [user.id]);
+    await db.update(
+        'Users',
+        {
+          'id': user.id,
+          'name': user.name,
+          'email': user.email,
+          'phoneNumber': user.phoneNumber,
+          'profilePictureUrl': user.profilePictureUrl,
+          'preferences': user.preferences,
+        },
+        where: 'id = ?',
+        whereArgs: [user.id]);
   }
 
   Future<AppUser?> getUserById(String id) async {
@@ -179,9 +198,14 @@ class LocalDB {
 
   Future<List<Event>> getEventsByUserId(String userId) async {
     final db = await database;
+
     final List<Map<String, dynamic>> maps =
         await db.query('Events', where: 'userId = ?', whereArgs: [userId]);
-    print(maps[0]);
+
+    if (maps.isEmpty) {
+      print('No events found for user: $userId');
+      return [];
+    }
     return List.generate(
       maps.length,
       (i) => Event.fromJson(maps[i]),
@@ -280,11 +304,14 @@ class LocalDB {
   Future<int> insertFriend(
       String userId, String friendId, String createdAt) async {
     final db = await database;
-    return await db.insert('Friends', {
-      'userId': userId,
-      'friendId': friendId,
-      'createdAt': createdAt,
-    });
+    return await db.insert(
+        'Friends',
+        {
+          'userId': userId,
+          'friendId': friendId,
+          'createdAt': createdAt,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   // Get friends by userId

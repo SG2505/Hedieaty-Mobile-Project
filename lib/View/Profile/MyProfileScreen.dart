@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/View/Widgets/GeneralTile.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
+import 'package:hedieaty/main.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -17,7 +18,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          appBarActions: [], title: 'My Profile', isTherebackButton: true),
+          appBarActions: [], title: currentUser.name, isTherebackButton: true),
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

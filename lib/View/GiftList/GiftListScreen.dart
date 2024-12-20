@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
+import 'package:hedieaty/Firebase/FirebaseGiftService.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -129,12 +130,12 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
               height: 20,
             ),
             FutureBuilder(
-              future: GiftController.getGiftsByEventId(widget.event!.id),
+              future: FirebaseGiftService().getGiftsByEvent(widget.event!.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: LoadingAnimationWidget.inkDrop(
-                      color: ThemeClass.blueThemeColor,
+                    child: LoadingAnimationWidget.threeArchedCircle(
+                      color: const Color.fromARGB(255, 44, 163, 207),
                       size: 60,
                     ),
                   );
@@ -149,7 +150,7 @@ class _GiftlistscreenState extends State<Giftlistscreen> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final gift = snapshot.data![index];
-                      print(gift);
+                      print(gift.status);
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(

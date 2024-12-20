@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/UserController.dart';
+import 'package:hedieaty/Firebase/AuthService.dart';
 import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/View/Widgets/TextFieldLabel.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -122,7 +123,9 @@ class _LoginscreenState extends State<Loginscreen> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _showResetPasswordDialog(context);
+                      },
                       child: Text(
                         "Forgot Password?",
                         style: TextStyle(
@@ -192,6 +195,63 @@ class _LoginscreenState extends State<Loginscreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showResetPasswordDialog(BuildContext context) {
+    TextEditingController popUpEmailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Enter Email to Reset Password",
+            style: ThemeClass.theme.textTheme.bodyMedium,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                  controller: popUpEmailController,
+                  decoration: ThemeClass.textFormFieldDecoration(
+                      prefixIcon: Icon(Icons.alternate_email_rounded))),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                String email = popUpEmailController.text.trim();
+                if (email.isNotEmpty) {
+                  try {
+                    await Authservice().resetPassword(email);
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Reset password link sent to $email"),
+                    ));
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Error sending reset password link"),
+                    ));
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Please enter a valid email address"),
+                  ));
+                }
+              },
+              child: Text("Send"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

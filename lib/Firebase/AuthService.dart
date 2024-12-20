@@ -50,4 +50,30 @@ class Authservice {
       return 'An unexpected error occurred: $e';
     }
   }
+
+  Future<String> resetPassword(String email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+      return 'Password reset email sent to $email';
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return 'No user found for this email address.';
+      } else if (e.code == 'invalid-email') {
+        return 'The email address is invalid.';
+      } else {
+        return 'An error occurred while sending the password reset email. Please try again.';
+      }
+    } catch (e) {
+      return 'An unexpected error occurred: $e';
+    }
+  }
+
+  Future<String> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+      return 'User signed out successfully';
+    } catch (e) {
+      return 'An error occurred while signing out: $e';
+    }
+  }
 }

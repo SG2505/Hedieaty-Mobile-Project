@@ -192,6 +192,8 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
                               "Category: ${gift.category} \nPrice: ${gift.price}",
                           toggleValue: gift.status != 'Available',
                           onToggleChanged: (value) async {
+                            isLoading = true;
+                            setState(() {});
                             if (value) {
                               gift.status = "Pledged";
                               gift.pledgerId = currentUser.id;
@@ -213,6 +215,8 @@ class _FriendGiftListScreenState extends State<FriendGiftListScreen> {
                             }
                             await GiftController.updateGift(gift);
                             _loadGifts(); // reload the gifts after update
+                            isLoading = false;
+                            setState(() {});
                           },
                           tileOnTap: () {
                             showDialog(

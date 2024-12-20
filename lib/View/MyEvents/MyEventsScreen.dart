@@ -57,6 +57,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             setState(() {
               currentIndex = index;
             });
+            currentIndex = 1;
           },
         ),
         body: SingleChildScrollView(
@@ -151,7 +152,8 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                         print(event);
                         return EventTile(
                           title: event.name!,
-                          imgPath: 'assets/icons/Miscellaneous/book.png',
+                          imgPath:
+                              ThemeClass.getCategoryImagePath(event.category),
                           date:
                               '${event.date.day} - ${event.date.month} - ${event.date.year}',
                           category: event.category!,

@@ -8,6 +8,10 @@ class ThemeClass {
   static ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(seedColor: blueThemeColor),
     textTheme: TextTheme(
+      displayLarge: TextStyle(
+        fontSize: 35,
+        fontFamily: 'LeckerliOne',
+      ),
       headlineLarge: TextStyle(
         fontSize: 30,
         fontFamily: 'LeckerliOne',
@@ -100,5 +104,34 @@ class ThemeClass {
             borderRadius: BorderRadius.circular(25),
           ),
         ));
+  }
+
+  static String getCategoryImagePath(String? category) {
+    switch (category) {
+      case "Anniversary":
+        return "assets/icons/CategoryIcons/anniversary.png";
+      case "Wedding":
+        return "assets/icons/CategoryIcons/wedding.png";
+      case "Celebration Party":
+        return "assets/icons/CategoryIcons/party.png";
+      case "Birthday":
+        return "assets/icons/CategoryIcons/birthday.png";
+      case "Graduation":
+        return "assets/icons/CategoryIcons/Graduation.png";
+      case "Baby Shower":
+        return "assets/icons/CategoryIcons/baby.png";
+      case "Engagement":
+        return "assets/icons/CategoryIcons/engagement.png";
+      case "Retirement":
+        return "assets/icons/CategoryIcons/retirement.png";
+      case "New Year's Eve":
+        return "assets/icons/CategoryIcons/new_year.png";
+      case "Farewell Party":
+        return "assets/icons/CategoryIcons/farewell_party.png";
+      case "Charity Event":
+        return "assets/icons/CategoryIcons/charity.png";
+      default:
+        return "assets/icons/CategoryIcons/event.png";
+    }
   }
 }

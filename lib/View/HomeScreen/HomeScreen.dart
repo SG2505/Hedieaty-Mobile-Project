@@ -201,7 +201,7 @@ class _HomescreenState extends State<Homescreen> {
                                     orElse: () => events.first,
                                   );
                                   upcomingEventName =
-                                      'Upcoming event: ${upcomingEvent.name}';
+                                      'upcoming: ${upcomingEvent.name}';
                                 }
 
                                 return Friendtile(
@@ -236,7 +236,7 @@ class _HomescreenState extends State<Homescreen> {
                                     orElse: () => events.first,
                                   );
                                   upcomingEventName =
-                                      'Upcoming event: ${upcomingEvent.name}';
+                                      'upcoming: ${upcomingEvent.name}';
                                 }
                                 return Friendtile(
                                   title: friend.name,

@@ -82,23 +82,11 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
               const SizedBox(
                 height: 20,
               ),
-              // InkWell(
-              //   onTap: () {},
-              //   borderRadius: BorderRadius.circular(25),
-              //   child: Ink(
-              //     width: 0.5.sw,
-              //     height: 0.15.sh,
-              //     decoration: BoxDecoration(
-              //         color: ThemeClass.blueThemeColor,
-              //         borderRadius: BorderRadius.circular(25)),
-              //     child: Center(
-              //       child: Text(
-              //         'Tap to set image',
-              //         style: Theme.of(context).textTheme.bodySmall,
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              Image.asset(
+                ThemeClass.getCategoryImagePath(categoryController.text),
+                width: 100,
+                height: 100,
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -155,6 +143,9 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
               ////////////Description form field///////////
               TextFieldLable(text: 'Category'),
               DropdownMenu(
+                  onSelected: (value) {
+                    setState(() {});
+                  },
                   width: 0.83.sw,
                   menuHeight: 200,
                   controller: categoryController,
@@ -248,8 +239,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
       {'value': 'baby_shower', 'label': 'Baby Shower'},
       {'value': 'graduation', 'label': 'Graduation'},
       {'value': 'retirement', 'label': 'Retirement'},
-      {'value': 'valentines_day', 'label': 'Valentine\'s Day'},
-      {'value': 'new_years_eve', 'label': 'New Year\'s Eve'},
+      {'value': 'new_years_eve', 'label': "New Year's Eve"},
       {'value': 'farewell_party', 'label': 'Farewell Party'},
       {'value': 'charity_event', 'label': 'Charity Event'},
     ];
@@ -260,5 +250,34 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
               label: category['label']!,
             ))
         .toList();
+  }
+
+  String getCategoryImagePath(String? category) {
+    switch (category) {
+      case "Anniversary":
+        return "assets/icons/CategoryIcons/anniversary.png";
+      case "Wedding":
+        return "assets/icons/CategoryIcons/wedding.png";
+      case "Celebration Party":
+        return "assets/icons/CategoryIcons/party.png";
+      case "Birthday":
+        return "assets/icons/CategoryIcons/birthday.png";
+      case "Graduation":
+        return "assets/icons/CategoryIcons/Graduation.png";
+      case "Baby Shower":
+        return "assets/icons/CategoryIcons/baby.png";
+      case "Engagement":
+        return "assets/icons/CategoryIcons/engagement.png";
+      case "Retirement":
+        return "assets/icons/CategoryIcons/retirement.png";
+      case "New Year's Eve":
+        return "assets/icons/CategoryIcons/new_year.png";
+      case "Farewell Party":
+        return "assets/icons/CategoryIcons/farewell_party.png";
+      case "Charity Event":
+        return "assets/icons/CategoryIcons/charity.png";
+      default:
+        return "assets/icons/CategoryIcons/event.png";
+    }
   }
 }

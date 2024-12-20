@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/EventDetails/EventDetailsTile.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
@@ -35,22 +35,10 @@ class _EventDetailsState extends State<EventDetails> {
             const SizedBox(
               height: 20,
             ),
-            InkWell(
-              onTap: () {},
-              borderRadius: BorderRadius.circular(25),
-              child: Ink(
-                width: 0.5.sw,
-                height: 0.15.sh,
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(206, 240, 252, 1),
-                    borderRadius: BorderRadius.circular(25)),
-                child: Center(
-                  child: Text(
-                    'Tap to set image',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ),
-              ),
+            Image.asset(
+              ThemeClass.getCategoryImagePath(widget.event!.category),
+              width: 100,
+              height: 100,
             ),
             const SizedBox(
               height: 20,
@@ -108,10 +96,11 @@ class _EventDetailsState extends State<EventDetails> {
                 text: widget.event!.status!,
                 leadingImgPath:
                     'assets/icons/EventDetailsIcons/completedEvent.png'),
-            leftAlignedLabel('Categroy'),
+            leftAlignedLabel('Category'),
             EventDetailsTile(
                 text: widget.event!.category!,
-                leadingImgPath: 'assets/icons/EventDetailsIcons/birthday.png'),
+                leadingImgPath:
+                    ThemeClass.getCategoryImagePath(widget.event!.category)),
             leftAlignedLabel('Go to Gift List'),
             EventDetailsTile(
               text: 'Gift List',

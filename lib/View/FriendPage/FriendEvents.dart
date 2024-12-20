@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Model/AppUser.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
@@ -95,9 +96,10 @@ class _FriendEventsScreenState extends State<FriendEventsScreen> {
                       var date = widget.events![index].date;
                       return GeneralTile(
                         text: widget.events![index].name!,
-                        subtitle: "${date.day}-${date.month}${date.year}",
-                        leadingImgPath:
-                            'assets/icons/CategoryIcons/birthday.png',
+                        subtitle:
+                            "${date.day}-${date.month}-${date.year}\nCategory: ${widget.events![index].category}\nLocation: ${widget.events![index].location}\nStaus: ${widget.events![index].status}",
+                        leadingImgPath: ThemeClass.getCategoryImagePath(
+                            widget.events![index].category),
                         trailingImgPath:
                             'assets/icons/EventDetailsIcons/next.png',
                         iconFucntion: () => context.push('/FriendGiftList',

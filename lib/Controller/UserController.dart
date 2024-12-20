@@ -32,7 +32,7 @@ class UserController {
         email: email,
         phoneNumber: phoneNumber,
         profilePictureUrl: profilePictureUrl,
-        preferences: {},
+        preferences: {'autoSync': 1},
       );
 
       await _firebaseUserService.createUser(newUser);

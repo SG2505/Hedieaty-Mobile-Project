@@ -46,8 +46,8 @@ class EventTile extends StatelessWidget {
               )
             : Image.asset(
                 imgPath,
-                width: 35,
-                height: 35,
+                width: 70,
+                height: 70,
               ),
         trailing: IconButton(
             onPressed: () {

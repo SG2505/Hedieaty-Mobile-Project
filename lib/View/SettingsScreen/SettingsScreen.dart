@@ -39,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           GeneralSwitchListTile(
-            text: "Auto Cloud Sync",
+            text: "Auto Cloud Publish",
             leadingImgPath: "assets/icons/Miscellaneous/cloud-sync.png",
             subtitile: "",
             hideToggle: false,

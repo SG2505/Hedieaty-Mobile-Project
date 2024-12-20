@@ -47,7 +47,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             height: 20,
           ),
           Text(
-            'Salah',
+            currentUser.name,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           SizedBox(
@@ -62,7 +62,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         WidgetStatePropertyAll(ThemeClass.blueThemeColor)),
                 iconAlignment: IconAlignment.end,
                 onPressed: () {
-                  context.push('/EditInfo');
+                  context.pushNamed('editInfo');
                 },
                 label: Text(
                   'Edit Profile Info',
@@ -119,42 +119,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           SizedBox(
             height: 12,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'My Events',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                TextButton(
-                  onPressed: () => context.push('/MyEvents'),
-                  child: Text(
-                    'Go to my events',
-                    style: TextStyle(
-                        color: Color.fromRGBO(24, 192, 218, 1),
-                        fontFamily: 'League Spartan',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
-          ),
           GeneralTile(
-            text: 'Event 1',
-            leadingImgPath: 'assets/icons/CategoryIcons/birthday.png',
-            subtitle: 'Date: 15/12/2024\nCategory: Birthday',
+            text: 'My Events',
+            leadingImgPath: 'assets/icons/CategoryIcons/event.png',
             trailingImgPath: 'assets/icons/GiftListScreenIcons/next.png',
-            iconFucntion: () => context.push('/EventDetails'),
-          ),
-          GeneralTile(
-            text: 'Event 2',
-            leadingImgPath: 'assets/icons/CategoryIcons/anniversary.png',
-            subtitle: 'Date: 15/12/2024\nCategory: Anniversary',
-            trailingImgPath: 'assets/icons/GiftListScreenIcons/next.png',
-            iconFucntion: () => context.push('/EventDetails'),
+            iconFucntion: () => context.pushNamed('myEvents'),
+            tileFucntion: () => context.pushNamed('myEvents'),
           ),
         ],
       )),

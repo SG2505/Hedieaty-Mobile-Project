@@ -76,6 +76,7 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
       body: SingleChildScrollView(
         child: Form(
           key: eventFormKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -114,6 +115,15 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                 child: TextFormField(
                   controller: locationController,
                   decoration: ThemeClass.textFormFieldDecoration(),
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Location can't be empty";
+                    }
+                    return null;
+                  },
                 ),
               ),
               ////////////Date form field////////////

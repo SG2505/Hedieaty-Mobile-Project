@@ -117,7 +117,7 @@ class ThemeClass {
       case "Birthday":
         return "assets/icons/CategoryIcons/birthday.png";
       case "Graduation":
-        return "assets/icons/CategoryIcons/Graduation.png";
+        return "assets/icons/CategoryIcons/graduation.png";
       case "Baby Shower":
         return "assets/icons/CategoryIcons/baby.png";
       case "Engagement":

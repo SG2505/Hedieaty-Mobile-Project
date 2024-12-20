@@ -7,6 +7,7 @@ import 'package:hedieaty/View/Widgets/GradientButton.dart';
 import 'package:hedieaty/main.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:toastification/toastification.dart';
 
 class EditInfoScreen extends StatefulWidget {
   const EditInfoScreen({super.key});
@@ -29,7 +30,7 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
     super.initState();
     nameController = TextEditingController(text: currentUser.name);
     emailController = TextEditingController(text: currentUser.email);
-    // phoneController = TextEditingController(text: currentUser.phoneNumber);
+    phoneController = TextEditingController(text: currentUser.phoneNumber);
   }
 
   @override
@@ -121,20 +122,31 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
               SizedBox(
                 width: 0.83.sw,
                 height: 80,
-                child: IntlPhoneField(
-                  initialValue: currentUser.phoneNumber,
+                child: TextFormField(
                   style: ThemeClass.theme.textTheme.bodyMedium,
                   controller: phoneController,
-                  decoration: ThemeClass.textFormFieldDecoration(),
-                  initialCountryCode: 'EG',
+                  decoration: ThemeClass.textFormFieldDecoration(
+                      prefixIcon: Icon(
+                    Icons.phone_android_outlined,
+                    color: Colors.grey,
+                  )),
                   onChanged: (phone) {
-                    completePhoneNumber = phone.completeNumber;
+                    completePhoneNumber = phone;
+                  },
+                  validator: (value) {
+                    if (value == null || value == '') {
+                      return "Phone number can't be empty";
+                    }
+                    if (value.length < 12) {
+                      return "Please add numeric country code";
+                    }
+                    return null;
                   },
                 ),
               ),
               isLoading
-                  ? LoadingAnimationWidget.fourRotatingDots(
-                      color: Color.fromRGBO(76, 212, 253, 1), size: 40)
+                  ? LoadingAnimationWidget.inkDrop(
+                      color: ThemeClass.blueThemeColor, size: 60)
                   : GradientButton(
                       width: 0.3.sw,
                       height: 0.05.sh,
@@ -158,13 +170,25 @@ class _EditInfoScreenState extends State<EditInfoScreen> {
                             setState(() {
                               isLoading = false;
                             });
-                            // Show success message or navigate to another screen
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("updated")));
+                            toastification.show(
+                                alignment: Alignment.topCenter,
+                                autoCloseDuration: const Duration(seconds: 5),
+                                icon: Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                ),
+                                context: context,
+                                title: Text("Updated Data Successfully"));
                           } else {
-                            // Show error message
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(result)));
+                            toastification.show(
+                                alignment: Alignment.topCenter,
+                                autoCloseDuration: const Duration(seconds: 5),
+                                context: context,
+                                icon: Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                ),
+                                title: Text(result));
                           }
                         }
                       },

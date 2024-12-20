@@ -162,7 +162,7 @@ class _LoginscreenState extends State<Loginscreen> {
                                 alignment: Alignment.topCenter,
                                 autoCloseDuration: const Duration(seconds: 5),
                                 context: context,
-                                title: Text(result));
+                                title: Text("incorrect email or password"));
                           }
                         }
                       },

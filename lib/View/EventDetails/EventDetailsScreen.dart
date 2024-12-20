@@ -60,7 +60,8 @@ class _EventDetailsState extends State<EventDetails> {
                   'Description',
                   style: TextStyle(
                       fontFamily: 'Figtree',
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
+                      color: Color.fromRGBO(3, 181, 231, 1),
                       fontSize: 20),
                 ),
               ),

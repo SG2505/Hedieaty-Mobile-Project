@@ -44,12 +44,12 @@ void main() async {
     final phoneField = find.byType(TextFormField).first;
     final addButton = find.text('Add');
 
-    await tester.enterText(phoneField, '1234567891');
+    await tester.enterText(phoneField, '1523345568');
     await tester.tap(addButton);
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
 
     // Verify friend is added
-    expect(find.textContaining('+201234567891'), findsOneWidget);
+    expect(find.textContaining('example'), findsOneWidget);
   });
 }

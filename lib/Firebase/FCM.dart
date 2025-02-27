@@ -177,7 +177,7 @@ Future<void> _backgroundMessageHandler(RemoteMessage message) async {
 Future<String?> _generateAccessKey() async {
   try {
     final jsonString = await rootBundle.loadString(
-        'assets/keys/hedieaty-f4f67-firebase-adminsdk-ntyaj-5b93bf99a1.json');
+        'assets/keys/hedieaty-f4f67-firebase-adminsdk-ntyaj-b8a3b59470.json');
     final serviceAccount = ServiceAccountCredentials.fromJson(jsonString);
     final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 

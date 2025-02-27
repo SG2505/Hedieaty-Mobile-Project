@@ -14,8 +14,8 @@ void main() async {
   await Firebase.initializeApp();
   final localDB = LocalDB();
   await FirebaseMessagingService().initNotifications();
-  // await localDB.resetDatabase2();
-  // await localDB.database; // initializes the db
+  //await localDB.resetDatabase2();
+  //await localDB.database; // initializes the db
 
   runApp(MyApp());
 }

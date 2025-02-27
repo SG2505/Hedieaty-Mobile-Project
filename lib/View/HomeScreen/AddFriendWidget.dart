@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
 import 'package:hedieaty/Controller/FriendController.dart';
+import 'package:hedieaty/Firebase/FCM.dart';
 import 'package:hedieaty/Firebase/FIrebaseFriendService.dart';
+import 'package:hedieaty/main.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:toastification/toastification.dart';
 
@@ -48,6 +50,12 @@ class _AddFriendWidgetState extends State<AddFriendWidget> {
                       FirebaseFriendService fs = FirebaseFriendService();
                       var friendMap = await fs.getRecentlyAddedFriendwithEvents(
                           completePhoneNumber);
+                      FirebaseMessagingService().sendNotification(
+                          targetFCMToken:
+                              friendMap['friend'].deviceMessageToken,
+                          title: "A friend Added You 🥳",
+                          body:
+                              "${currentUser.name} added you to his friend list");
                       setState(() => isLoading = false);
 
                       if (mounted) {

@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -76,7 +77,6 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
       body: SingleChildScrollView(
         child: Form(
           key: eventFormKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -204,7 +204,12 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
                     bool result = widget.event == null
                         ? await EventController.addEvent(event)
                         : await EventController.updateEvent(event);
+
                     if (result) {
+                      if (await _isConnected() == false && autoSync == 1) {
+                        print("is not connected:");
+                        await _showUnsyncedEventWarning(context);
+                      }
                       toastification.show(
                           icon: Icon(
                             Icons.check_circle,
@@ -262,32 +267,45 @@ class _AddEditEventScreenState extends State<AddEditEventScreen> {
         .toList();
   }
 
-  String getCategoryImagePath(String? category) {
-    switch (category) {
-      case "Anniversary":
-        return "assets/icons/CategoryIcons/anniversary.png";
-      case "Wedding":
-        return "assets/icons/CategoryIcons/wedding.png";
-      case "Celebration Party":
-        return "assets/icons/CategoryIcons/party.png";
-      case "Birthday":
-        return "assets/icons/CategoryIcons/birthday.png";
-      case "Graduation":
-        return "assets/icons/CategoryIcons/Graduation.png";
-      case "Baby Shower":
-        return "assets/icons/CategoryIcons/baby.png";
-      case "Engagement":
-        return "assets/icons/CategoryIcons/engagement.png";
-      case "Retirement":
-        return "assets/icons/CategoryIcons/retirement.png";
-      case "New Year's Eve":
-        return "assets/icons/CategoryIcons/new_year.png";
-      case "Farewell Party":
-        return "assets/icons/CategoryIcons/farewell_party.png";
-      case "Charity Event":
-        return "assets/icons/CategoryIcons/charity.png";
-      default:
-        return "assets/icons/CategoryIcons/event.png";
-    }
+  static Future<bool> _isConnected() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi);
+  }
+
+  Future<void> _showUnsyncedEventWarning(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: ThemeClass.blueThemeColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          content: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Colors.yellow, size: 30),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  "This event is saved locally successfully but will not be published to the cloud until internet connection is restored and auto cloud sync is closed and opened again from the settings.",
+                  style: ThemeClass.theme.textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "OK",
+                style: ThemeClass.theme.textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

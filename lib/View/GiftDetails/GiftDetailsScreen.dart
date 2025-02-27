@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -282,6 +283,10 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
                                   ? await GiftController.addGift(gift)
                                   : await GiftController.updateGift(gift);
                               if (result) {
+                                if (await _isConnected() == false &&
+                                    autoSync == 1) {
+                                  await _showUnsyncedEventWarning(context);
+                                }
                                 toastification.show(
                                     icon: Icon(
                                       Icons.check_circle,
@@ -358,5 +363,47 @@ class _GiftDetailsScreenState extends State<GiftDetailsScreen> {
           context: context,
           title: Text('Error Deleting Gift'));
     }
+  }
+
+  static Future<bool> _isConnected() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi);
+  }
+
+  Future<void> _showUnsyncedEventWarning(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: ThemeClass.blueThemeColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          content: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Colors.yellow, size: 30),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  "This gift is saved locally successfully but will not be published to the cloud until internet connection is restored and auto cloud sync is closed and opened again from the settings.",
+                  style: ThemeClass.theme.textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "OK",
+                style: ThemeClass.theme.textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

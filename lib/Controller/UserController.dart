@@ -57,6 +57,7 @@ class UserController {
       print("object");
       var userData = await _firebaseUserService.fetchUser(result.uid);
       currentUser = AppUser.fromJson(userData!);
+      await _localDB.insertUser(currentUser);
       return true;
     } else {
       // Failure: Return the error message

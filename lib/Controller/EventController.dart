@@ -2,6 +2,7 @@ import 'package:hedieaty/Firebase/FirebaseEventsService.dart';
 import 'package:hedieaty/Firebase/FirebaseGiftService.dart';
 import 'package:hedieaty/Model/Event.dart';
 import 'package:hedieaty/SQL_Local/LocalDB.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hedieaty/main.dart';
 
 class EventController {
@@ -13,11 +14,14 @@ class EventController {
 
   static Future<bool> addEvent(Event event) async {
     try {
-      event.isPublished = autoSync == 1 ? 1 : 0;
-      await _localDB.insertEvent(event);
-      if (autoSync == 1) {
+      if (autoSync == 1 && await _isConnected()) {
+        event.isPublished = 1;
         await firebaseEventService.createEvent(event);
+      } else {
+        event.isPublished = 0;
       }
+      await _localDB.insertEvent(event);
+
       return true;
     } catch (e) {
       print("Error: $e");
@@ -27,11 +31,14 @@ class EventController {
 
   static Future<bool> updateEvent(Event event) async {
     try {
-      event.isPublished = autoSync == 1 ? 1 : 0;
-      await _localDB.updateEvent(event);
-      if (autoSync == 1) {
+      if (autoSync == 1 && await _isConnected()) {
+        event.isPublished = 1;
         await firebaseEventService.updateEvent(event);
+      } else {
+        event.isPublished = 0;
       }
+      await _localDB.updateEvent(event);
+
       return true;
     } catch (e) {
       print("Error: $e");
@@ -43,17 +50,20 @@ class EventController {
     try {
       events = await _localDB.getEventsByUserId(currentUser.id!);
 
-      var firebaseEvents =
-          await firebaseEventService.getEventsByUserId(currentUser.id!);
+      if (await _isConnected()) {
+        var firebaseEvents =
+            await firebaseEventService.getEventsByUserId(currentUser.id!);
 
-      for (var firebaseEvent in firebaseEvents) {
-        bool isEventInLocalDB =
-            events.any((localEvent) => localEvent.id == firebaseEvent.id);
-        if (!isEventInLocalDB) {
-          await _localDB.insertEvent(firebaseEvent);
-          events.add(firebaseEvent);
+        for (var firebaseEvent in firebaseEvents) {
+          bool isEventInLocalDB =
+              events.any((localEvent) => localEvent.id == firebaseEvent.id);
+          if (!isEventInLocalDB) {
+            await _localDB.insertEvent(firebaseEvent);
+            events.add(firebaseEvent);
+          }
         }
       }
+
       return events;
     } catch (e) {
       print("Error: $e");
@@ -62,8 +72,8 @@ class EventController {
   }
 
   static Future<bool> deleteEvent(Event event) async {
-    if (autoSync == 0) {
-      print("Delete not allowed when auto-sync is off.");
+    if (autoSync == 0 || await _isConnected() == false) {
+      print("Delete not allowed when auto-sync is off or no internet.");
       return false;
     }
     try {
@@ -97,5 +107,11 @@ class EventController {
       print("Error syncing data: $e");
       return false;
     }
+  }
+
+  static Future<bool> _isConnected() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi);
   }
 }

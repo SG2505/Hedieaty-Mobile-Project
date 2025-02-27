@@ -17,6 +17,7 @@ import 'package:hedieaty/View/MyPledgedGifts/MyPledgedGiftsScreen.dart';
 import 'package:hedieaty/View/Profile/MyProfileScreen.dart';
 import 'package:hedieaty/View/SettingsScreen/SettingsScreen.dart';
 import 'package:hedieaty/View/SignUp/SignUpScreen.dart';
+import 'package:hedieaty/View/SplashScreen/SplashScreen.dart';
 
 class RouterClass {
   static final GoRouter router = GoRouter(
@@ -36,6 +37,13 @@ class RouterClass {
         name: 'signup',
         builder: (BuildContext context, GoRouterState state) {
           return const SignUpScreen();
+        },
+      ),
+      GoRoute(
+        path: '/SplashScreen',
+        name: 'splashScreen',
+        builder: (BuildContext context, GoRouterState state) {
+          return const SplashScreen();
         },
       ),
 

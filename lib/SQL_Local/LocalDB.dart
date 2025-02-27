@@ -40,7 +40,8 @@ class LocalDB {
         email TEXT NOT NULL UNIQUE,
         phoneNumber TEXT NOT NULL,
         profilePictureUrl TEXT,
-        preferences TEXT
+        preferences TEXT,
+        autoSync INT INTEGER NOT NULL DEFAULT 1
       )
     ''');
     //event table//
@@ -121,7 +122,7 @@ class LocalDB {
           'email': user.email,
           'phoneNumber': user.phoneNumber,
           'profilePictureUrl': user.profilePictureUrl,
-          'preferences': user.preferences,
+          'autoSync': user.preferences['autoSync'],
         },
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -136,7 +137,7 @@ class LocalDB {
           'email': user.email,
           'phoneNumber': user.phoneNumber,
           'profilePictureUrl': user.profilePictureUrl,
-          'preferences': user.preferences,
+          'autoSync': user.preferences['autoSync'],
         },
         where: 'id = ?',
         whereArgs: [user.id]);

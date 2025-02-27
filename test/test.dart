@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 void main() async {
   // Initialize the integration test binding before running tests
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
+  /////////////////////////////////remove splash screen from home route to work//////////////////////////////////////
   setUpAll(() async {
     // Initialize Firebase
     await Firebase.initializeApp(
@@ -21,6 +21,7 @@ void main() async {
     await tester.pumpWidget(MyApp());
     await tester.pumpAndSettle();
 
+    //await tester.pump(const Duration(seconds: 20));
     // Find login screen widgets
     final emailField = find.byType(TextFormField).at(0);
     final passwordField = find.byType(TextFormField).at(1);
@@ -44,12 +45,12 @@ void main() async {
     final phoneField = find.byType(TextFormField).first;
     final addButton = find.text('Add');
 
-    await tester.enterText(phoneField, '1523345568');
+    await tester.enterText(phoneField, '1236459780');
     await tester.tap(addButton);
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
 
     // Verify friend is added
-    expect(find.textContaining('example'), findsOneWidget);
+    expect(find.textContaining('test'), findsOneWidget);
   });
 }

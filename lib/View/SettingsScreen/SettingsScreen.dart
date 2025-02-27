@@ -101,7 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           content: Row(
             children: [
               LoadingAnimationWidget.inkDrop(
-                  color: ThemeClass.blueThemeColor, size: 60),
+                  color: ThemeClass.blueThemeColor, size: 40),
               SizedBox(width: 20),
               Text("Syncing data..."),
             ],

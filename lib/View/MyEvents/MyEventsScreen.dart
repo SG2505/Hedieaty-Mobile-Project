@@ -149,7 +149,12 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                       itemCount: filteredEvents.length,
                       itemBuilder: (context, index) {
                         final event = filteredEvents[index];
-                        print(event);
+
+                        if (event.date.day == DateTime.now().day &&
+                            event.date.month == DateTime.now().month &&
+                            event.date.year == DateTime.now().year) {
+                          event.status = "current";
+                        }
                         return EventTile(
                           title: event.name!,
                           imgPath:
@@ -175,7 +180,15 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                               await GiftController.deleteAllGiftsByEventId(
                                   event.id);
                               await EventController.deleteEvent(event);
-
+                              toastification.show(
+                                  context: context,
+                                  autoCloseDuration: Duration(seconds: 5),
+                                  alignment: Alignment.topCenter,
+                                  icon: Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                  ),
+                                  title: Text("Event Deleted Successfully"));
                               setState(() {
                                 setState(() {
                                   events.remove(event);

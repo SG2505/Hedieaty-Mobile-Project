@@ -1,7 +1,9 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hedieaty/Config/theme.dart';
+import 'package:hedieaty/View/Widgets/CustomBottomNavigationBar.dart';
 import 'package:hedieaty/View/Widgets/GeneralTile.dart';
 import 'package:hedieaty/View/Widgets/AppBar.dart';
 import 'package:hedieaty/main.dart';
@@ -14,11 +16,21 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
+  int currentIndex = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
           appBarActions: [], title: currentUser.name, isTherebackButton: true),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+          currentIndex = 2;
+        },
+      ),
       body: SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -83,7 +95,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         WidgetStatePropertyAll(ThemeClass.blueThemeColor)),
                 iconAlignment: IconAlignment.end,
                 onPressed: () {
-                  context.push('/EditInfo');
+                  AppSettings.openAppSettings(
+                      type: AppSettingsType.notification);
                 },
                 label: Text(
                   'Notifications',

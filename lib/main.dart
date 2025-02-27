@@ -37,7 +37,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-void initializeFirebase() async {
-  await Firebase.initializeApp();
-}
